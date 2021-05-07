@@ -5,7 +5,7 @@ public class MazeSquare extends AbstractMaze {
     private final int width;
     private final int length;
 
-    public MazeSquare(int width, int length, String gameState) {
+    public MazeSquare(int width, int length, String initialState) {
         this.width = width;
         this.length = length;
         maze = new TileSquare[width][length];

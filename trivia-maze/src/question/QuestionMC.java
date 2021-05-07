@@ -1,8 +1,7 @@
 package question;
 
-public class QuestionMC extends AbstractQuestion {
-    public QuestionMC(boolean isSolved,
-                      String question, String prompt, String answer) {
-        super(QuestionType.MC, isSolved, question, prompt, answer);
+public final class QuestionMC extends AbstractQuestion {
+    public QuestionMC(String question, String prompt, String answer) {
+        super(QuestionType.MC, question, prompt, answer);
     }
 }

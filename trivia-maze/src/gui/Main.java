@@ -1,4 +1,6 @@
-package main;
+package gui;
+import maze.Room;
+import maze.RoomSimple;
 import question.Question;
 import question.QuestionTF;
 
@@ -55,5 +57,8 @@ public class Main {
         frame.setSize(1280,720);
         frame.add(panel);
         frame.setVisible(true);
+
+        Room room = new RoomSimple(10);
+        System.out.println(room);
     }
 }

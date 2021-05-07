@@ -1,6 +1,8 @@
 package maze;
 
+import java.util.Set;
+
 public abstract class AbstractMaze implements Maze {
-    public abstract Tile getTile(int x, int y);
-    public abstract Tile getTile(String position);
+    public abstract Set<Room> getRooms();
+    public abstract Set<Room> getNeighbors(Room current);
 }

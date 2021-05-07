@@ -1,6 +1,8 @@
 package maze;
 
+import java.util.Set;
+
 public interface Maze {
-    Tile getTile(int x, int y);
-    Tile getTile(String position);
+    Set<Room> getRooms();
+    Set<Room> getNeighbors(Room x);
 }

@@ -1,11 +1,11 @@
 package question;
 
 public final class QuestionTF extends AbstractQuestion {
-    public QuestionTF(String question, String prompt, String answer) {
+    public QuestionTF(String question, String[] prompt, String answer) {
         super(QuestionType.TF, question, prompt, answer);
     }
 
     public QuestionTF(String question, String answer) {
-        super(QuestionType.TF, question, "True or False?", answer);
+        super(QuestionType.TF, question, new String[]{"True or False?"}, answer);
     }
 }

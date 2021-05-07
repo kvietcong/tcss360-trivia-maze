@@ -12,7 +12,7 @@ public class Main {
 
         Question testQ = new QuestionTF("You are ok.", "false");
         JLabel question = new JLabel(testQ.getQuestion());
-        JLabel prompt = new JLabel(testQ.getPrompt());
+        JLabel prompt = new JLabel(testQ.getChoices()[0]);
         JButton trueButton = new JButton("True");
         JButton falseButton = new JButton("False");
 

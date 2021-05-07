@@ -1,11 +1,11 @@
 package question;
 
 public final class QuestionSA extends AbstractQuestion {
-    public QuestionSA(String question, String prompt, String answer) {
+    public QuestionSA(String question, String[] prompt, String answer) {
         super(QuestionType.SA, question, prompt, answer);
     }
 
     public QuestionSA(String question, String answer) {
-        super(QuestionType.SA, question, "", answer);
+        super(QuestionType.SA, question, new String[0], answer);
     }
 }

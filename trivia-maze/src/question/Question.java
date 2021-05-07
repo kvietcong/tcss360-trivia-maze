@@ -1,11 +1,11 @@
-package main;
+package question;
 
 public interface Question {
     enum QuestionType { MC, TF, SA }
     QuestionType getType();
 
-    String getPrompt();
     String getQuestion();
+    String getPrompt();
 
     boolean getIsSolved();
     boolean solve(String answer);

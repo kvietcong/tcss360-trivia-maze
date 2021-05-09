@@ -1,8 +1,6 @@
 package maze;
 
-import java.io.Serializable;
-
-public class RoomSimple extends AbstractRoom implements Serializable {
+public class RoomSimple extends AbstractRoom {
     private final int id;
 
     public RoomSimple(int id) { this.id = id; }

@@ -1,4 +1,6 @@
 package gui;
+import maze.Maze;
+import maze.MazeGraph;
 import maze.Room;
 import maze.RoomSimple;
 import question.Question;
@@ -6,6 +8,10 @@ import question.QuestionTF;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Main {
     public static void main(String[] args) {
@@ -58,7 +64,32 @@ public class Main {
         frame.add(panel);
         frame.setVisible(true);
 
-        Room room = new RoomSimple(10);
-        System.out.println(room);
+        Room room1 = new RoomSimple(1);
+        Room room2 = new RoomSimple(2);
+        Room room3 = new RoomSimple(3);
+
+        Set<Room> rooms1 = new HashSet<>();
+        rooms1.add(room2);
+        rooms1.add(room3);
+        Set<Room> rooms2 = new HashSet<>();
+        rooms2.add(room1);
+        Set<Room> rooms3 = new HashSet<>();
+        rooms3.add(room1);
+
+        Map<Room, Set<Room>> rooms = new HashMap<>();
+        rooms.put(room1, rooms1);
+        rooms.put(room2, rooms2);
+        rooms.put(room3, rooms3);
+
+        Maze maze = new MazeGraph(rooms);
+        maze.forEach(room -> {
+            var neighbors = maze.getNeighbors(room);
+            StringBuilder res = new StringBuilder(" {{ Neighbors:");
+            for (var neighbor : neighbors) {
+                res.append(" ").append(neighbor);
+            }
+            res.append(" }}");
+            System.out.println(room + res.toString());
+        });
     }
 }

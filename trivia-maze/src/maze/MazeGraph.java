@@ -1,8 +1,6 @@
 package maze;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class MazeGraph extends AbstractMaze {
     private final Map<Room, Set<Room>> maze;

@@ -8,10 +8,11 @@ import question.QuestionTF;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -91,5 +92,16 @@ public class Main {
             res.append(" }}");
             System.out.println(room + res.toString());
         });
+
+        try {
+            System.out.println(serializableToString(maze));
+        } catch (IOException ignored) { }
+    }
+    private static String serializableToString(Serializable o) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(byteArrayOutputStream);
+        oos.writeObject(o);
+        oos.close();
+        return Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
     }
 }

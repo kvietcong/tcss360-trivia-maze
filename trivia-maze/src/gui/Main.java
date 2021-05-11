@@ -4,6 +4,7 @@ import maze.MazeGraph;
 import maze.Room;
 import maze.RoomSimple;
 import question.Question;
+import question.QuestionFactory;
 import question.QuestionTF;
 
 import javax.swing.*;
@@ -65,9 +66,9 @@ public class Main {
         frame.add(panel);
         frame.setVisible(true);
 
-        Room room1 = new RoomSimple(1);
-        Room room2 = new RoomSimple(2);
-        Room room3 = new RoomSimple(3);
+        Room room1 = new RoomSimple(1, QuestionFactory.createQuestion());
+        Room room2 = new RoomSimple(2, QuestionFactory.createQuestion());
+        Room room3 = new RoomSimple(3, QuestionFactory.createQuestion());
 
         Set<Room> rooms1 = new HashSet<>();
         rooms1.add(room2);

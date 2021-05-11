@@ -1,5 +1,7 @@
 package maze;
 
+import question.Question;
+
 import java.io.Serializable;
 
 public interface Room extends Serializable {
@@ -8,4 +10,5 @@ public interface Room extends Serializable {
      * @return A unique identifier that can be used to reconstruct a room
      */
     String getID();
+    Question getQuestion();
 }

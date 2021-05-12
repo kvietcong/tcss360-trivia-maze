@@ -60,6 +60,7 @@ public class Main {
         panel.add(resetButton);
 
         JFrame frame = new JFrame("Basic UI");
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1280,720);
         frame.add(panel);

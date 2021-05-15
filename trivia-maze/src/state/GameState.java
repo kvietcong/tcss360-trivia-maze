@@ -1,9 +1,19 @@
 package state;
 
-import java.io.Serializable;
+import maze.Maze;
+import maze.Room;
+import question.Question;
 
-public class GameState implements Serializable {
-    public GameState(String initialState) {
-        System.out.println("I will do something");
-    }
+import java.io.Serializable;
+import java.util.Map;
+
+public interface GameState extends Serializable {
+    GameState getInstance();
+
+    void loadState(String info);
+    void saveState(String info);
+    void initiateState();
+
+    Maze getMaze();
+    Map<Room, Question> getQuestions();
 }

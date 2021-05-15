@@ -1,4 +1,3 @@
-package gui;
 import maze.Maze;
 import maze.MazeGraph;
 import maze.Room;
@@ -98,6 +97,7 @@ public class Main {
             System.out.println(serializableToString(maze));
         } catch (IOException ignored) { }
     }
+
     private static String serializableToString(Serializable o) throws IOException {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(byteArrayOutputStream);

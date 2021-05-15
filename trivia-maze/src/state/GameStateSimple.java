@@ -21,11 +21,12 @@ public class GameStateSimple implements GameState {
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
-    public GameState getInstance() { return STATE; }
+    public static GameState getInstance() { return STATE; }
 
-    public void loadState(Maze maze, Map<Room, Question> questions) {
+    public void loadState(Maze maze, Map<Room, Question> questions, Room currentRoom) {
         this.maze = maze;
         this.questions = questions;
+        this.currentRoom = currentRoom;
     }
 
     public void loadState(String loadInfo) { }
@@ -45,6 +46,8 @@ public class GameStateSimple implements GameState {
     public Room getCurrentRoom() { return currentRoom; }
 
     public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
+
+    public Question getCurrentQuestion() { return getRoomQuestion(currentRoom); }
 
     public void moveToRoom(Room newRoom) {
         Room oldRoom = currentRoom;

@@ -19,4 +19,9 @@ public abstract class AbstractQuestion implements Question {
     public boolean isCorrectAnswer(String answer) {
         return answer.equalsIgnoreCase(this.answer);
     }
+
+    @Override
+    public String toString() {
+        return question + "\nChoices: " + String.join(", ", choices) + "\nAnswer: " + answer;
+    }
 }

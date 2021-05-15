@@ -10,14 +10,10 @@ import java.util.Map;
 import java.util.Set;
 
 public interface GameState extends Serializable {
-    enum GameEvent {
-        MOVE
-    }
-
-    GameState getInstance();
+    enum GameEvent { MOVE, ANSWER }
 
     void loadState(String loadInfo);
-    void loadState(Maze maze, Map<Room, Question> questions);
+    void loadState(Maze maze, Map<Room, Question> questions, Room currentRoom);
     void saveState(String saveInfo);
     void initiateState();
 
@@ -25,6 +21,7 @@ public interface GameState extends Serializable {
     Room getCurrentRoom();
     void moveToRoom(Room newRoom);
     Question getRoomQuestion(Room room);
+    Question getCurrentQuestion();
     Set<Room> getCurrentNeighbors();
     Map<Room, Question> getQuestions();
 

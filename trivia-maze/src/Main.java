@@ -1,3 +1,4 @@
+import gui.ChoicePanel;
 import maze.Maze;
 import maze.MazeGraph;
 import maze.Room;
@@ -5,6 +6,8 @@ import maze.RoomSimple;
 import question.Question;
 import question.QuestionFactory;
 import question.QuestionTF;
+import state.GameState;
+import state.GameStateSimple;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,9 +24,9 @@ public class Main {
 
         Question testQ = new QuestionTF("You are ok.", "false");
         JLabel question = new JLabel(testQ.getQuestion());
-        JLabel prompt = new JLabel(testQ.getChoices()[0]);
-        JButton trueButton = new JButton("True");
-        JButton falseButton = new JButton("False");
+        JLabel prompt = new JLabel(String.join(" or ", testQ.getChoices()) + "?");
+        JButton trueButton = new JButton(testQ.getChoices()[0]);
+        JButton falseButton = new JButton(testQ.getChoices()[1]);
 
         JPanel panel = new JPanel(new FlowLayout());
         panel.add(question);
@@ -96,6 +99,26 @@ public class Main {
         try {
             System.out.println(serializableToString(maze));
         } catch (IOException ignored) { }
+
+        // Game State
+        GameState gameState = GameStateSimple.getInstance();
+
+        Map<Room, Question> questions = new HashMap<>();
+        maze.forEach(room -> {
+            questions.put(room, testQ);
+        });
+
+        gameState.loadState(maze, questions, maze.getRooms().iterator().next());
+
+        System.out.println(gameState.getCurrentRoom());
+        System.out.println(gameState.getCurrentNeighbors());
+        System.out.println(gameState.getCurrentQuestion());
+
+        JFrame frame2 = new JFrame("Testing");
+        frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame2.setSize(1280,720);
+        frame2.add(new ChoicePanel(testQ, gameState));
+        frame2.setVisible(true);
     }
 
     private static String serializableToString(Serializable o) throws IOException {

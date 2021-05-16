@@ -1,5 +1,6 @@
 package gui;
 
+import maze.Room;
 import question.Question;
 import state.GameState;
 
@@ -12,30 +13,33 @@ import java.util.Set;
 
 import static state.GameState.GameEvent.*;
 
-public class ChoicePanel extends JPanel implements PropertyChangeListener {
-    private final GameState gameState;
-
-    private Set<JButton> choiceButtons;
-    private Question question;
-
+public class QuestionChoicePanel extends JPanel implements PropertyChangeListener {
     /** The size of the increase/decrease buttons. */
     private static final Dimension BUTTON_SIZE = new Dimension(50, 25);
     /** The amount of padding for the change panel. */
     private static final int HORIZONTAL_PADDING = 30;
 
-    public ChoicePanel(Question question, GameState gameState) {
+    private final GameState gameState;
+
+    // Constructor with no beginning choices
+    public QuestionChoicePanel(GameState gameState) {
         super();
         this.gameState = gameState;
         gameState.addPropertyChangeListener(this);
-        choiceButtons = new HashSet<>();
+    }
+
+    // Constructor with beginning choices
+    public QuestionChoicePanel(Question question, GameState gameState) {
+        this(gameState);
         updateQuestion(question);
     }
 
     public void updateQuestion(Question newQuestion) {
-        question = newQuestion;
+        // Clear the Panel
         removeAll();
-        choiceButtons = constructChoiceButtons(newQuestion);
-        choiceButtons.forEach(this::add);
+        // Build new buttons and add it to Panel
+        constructChoiceButtons(newQuestion).forEach(this::add);
+        // Make sure to update the UI
         revalidate();
         repaint();
     }
@@ -63,8 +67,9 @@ public class ChoicePanel extends JPanel implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent event) {
         // Do something on the MOVE event
-        if (MOVE.toString().equals(event.getPropertyName())) {
-            final Question newQuestion = gameState.getCurrentQuestion();
+        if (ANSWER.toString().equals(event.getPropertyName())) {
+            final Room newRoom = (Room) event.getNewValue();
+            final Question newQuestion = gameState.getQuestion(newRoom);
             updateQuestion(newQuestion);
         }
     }

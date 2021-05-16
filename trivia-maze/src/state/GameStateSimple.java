@@ -9,13 +9,17 @@ import maze.Maze;
 import maze.Room;
 import question.Question;
 
+import static state.GameState.GameEvent.*;
+
 public class GameStateSimple implements GameState {
     private static final GameState STATE = new GameStateSimple();
 
+    private final PropertyChangeSupport propertyChangeSupport;
+
     private Maze maze;
-    private Map<Room, Question> questions;
     private Room currentRoom;
-    private PropertyChangeSupport propertyChangeSupport;
+    private Set<Room> unlockedRooms;
+    private Map<Room, Question> questions;
 
     private GameStateSimple() {
         propertyChangeSupport = new PropertyChangeSupport(this);
@@ -23,9 +27,13 @@ public class GameStateSimple implements GameState {
 
     public static GameState getInstance() { return STATE; }
 
-    public void loadState(Maze maze, Map<Room, Question> questions, Room currentRoom) {
+    public void loadState(Maze maze,
+                          Map<Room, Question> questions,
+                          Set<Room> unlockedRooms,
+                          Room currentRoom) {
         this.maze = maze;
         this.questions = questions;
+        this.unlockedRooms = unlockedRooms;
         this.currentRoom = currentRoom;
     }
 
@@ -35,9 +43,7 @@ public class GameStateSimple implements GameState {
     public void saveState(String saveInfo) { }
 
     // TODO: Preload or Generate a new Maze
-    public void initiateState() {
-        propertyChangeSupport = new PropertyChangeSupport(this);
-    }
+    public void initiateState() { }
 
     public Maze getMaze() { return maze; }
 
@@ -45,19 +51,23 @@ public class GameStateSimple implements GameState {
 
     public Room getCurrentRoom() { return currentRoom; }
 
-    public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
-
-    public Question getCurrentQuestion() { return getRoomQuestion(currentRoom); }
+    public Question getQuestion(Room room) { return questions.getOrDefault(room, null); }
 
     public void moveToRoom(Room newRoom) {
         Room oldRoom = currentRoom;
         currentRoom = newRoom;
-        propertyChangeSupport.firePropertyChange(GameEvent.MOVE.toString(), oldRoom, newRoom);
+        propertyChangeSupport.firePropertyChange(MOVE.toString(), oldRoom, newRoom);
     }
 
     public Set<Room> getCurrentNeighbors() {
         return maze.getNeighbors(currentRoom);
     }
+
+    public Set<Room> getUnlockedRooms() { return unlockedRooms; }
+
+    public boolean isUnlocked(Room room) { return unlockedRooms.contains(room); }
+
+    public void unlockRoom(Room room) { unlockedRooms.add(room); }
 
     public void addPropertyChangeListener(final PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);

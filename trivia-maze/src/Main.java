@@ -1,4 +1,4 @@
-import gui.ChoicePanel;
+import gui.QuestionChoicePanel;
 import maze.Maze;
 import maze.MazeGraph;
 import maze.Room;
@@ -108,16 +108,14 @@ public class Main {
             questions.put(room, testQ);
         });
 
-        gameState.loadState(maze, questions, maze.getRooms().iterator().next());
-
-        System.out.println(gameState.getCurrentRoom());
-        System.out.println(gameState.getCurrentNeighbors());
-        System.out.println(gameState.getCurrentQuestion());
+        Room start = maze.getRooms().iterator().next();
+        gameState.loadState(maze, questions,
+                new HashSet<>(Collections.singleton(start)), start);
 
         JFrame frame2 = new JFrame("Testing");
         frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame2.setSize(1280,720);
-        frame2.add(new ChoicePanel(testQ, gameState));
+        frame2.add(new QuestionChoicePanel(testQ, gameState));
         frame2.setVisible(true);
     }
 

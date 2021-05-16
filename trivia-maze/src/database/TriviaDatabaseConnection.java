@@ -16,13 +16,13 @@ public class TriviaDatabaseConnection implements Database {
         this.dbc = new DatabaseConnection("trivia.db");
     }
 
-    public static TriviaDatabaseConnection getInstance() {
+    public static TriviaDatabaseConnection getConnection() {
         return TDBC;
     }
 
     @Override
-    public List<Map<String, String>> getData() {
-        return this.dbc.getData("questions");
+    public Map<String, List<Map<String, String>>> getData() {
+        return this.dbc.getData();
     }
 
     @Override
@@ -33,10 +33,11 @@ public class TriviaDatabaseConnection implements Database {
     public static void main(String[] args)
     {
         // Test getting a connection to the trivia database and print the content
-        TriviaDatabaseConnection tdbc = TriviaDatabaseConnection.getInstance();
-        List<Map<String, String>> questions = tdbc.getData();
+        TriviaDatabaseConnection tdbc = TriviaDatabaseConnection.getConnection();
+        List<Map<String, String>> questions = tdbc.getData().get("questions");
         for (Map<String, String> q : questions) {
             System.out.println(q);
         }
+        tdbc.close();
     }
 }

@@ -9,7 +9,8 @@ public class MazeArray extends AbstractMaze {
 
     @Override
     public Set<Room> getRooms() {
-        return new HashSet<>(Arrays.stream(rooms).flatMap(Arrays::stream).toList());
+        //return new HashSet<>(Arrays.stream(rooms).flatMap(Arrays::stream).toList());
+        return null;
     }
 
     @Override

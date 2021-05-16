@@ -3,7 +3,7 @@ package database;
 import java.sql.*;
 import java.util.*;
 
-public class DatabaseConnection {
+public class DatabaseConnection implements Database{
 
     private Connection connection;
 
@@ -20,10 +20,10 @@ public class DatabaseConnection {
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);  // set timeout to 30 sec.
 
-            statement.executeUpdate("drop table if exists questions");
-            statement.executeUpdate("create table questions (id integer, question string, answers string)");
-            statement.executeUpdate("insert into questions values(1, 'Are you good?', 'True|False')");
-            statement.executeUpdate("insert into questions values(2, 'Are you sure?', 'Yes|No|Maybe|I don''t know')");
+//            statement.executeUpdate("drop table if exists questions");
+//            statement.executeUpdate("create table questions (id integer, question string, choices string, answer string)");
+//            statement.executeUpdate("insert into questions values(1, 'Are you good?', 'True|False', 'True')");
+//            statement.executeUpdate("insert into questions values(2, 'Are you sure?', 'Yes|No|Maybe|I don''t know', 'Yes')");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -34,6 +34,7 @@ public class DatabaseConnection {
      * Each key is a table name, and its value is the list of data from that table.
      * @return Map of tables and their data from the database.
      */
+    @Override
     public Map<String, List<Map<String, String>>> getData() {
         try {
             // Create a map of table names to table data
@@ -49,6 +50,7 @@ public class DatabaseConnection {
                 String tableName = tablesInfo.getString("TABLE_NAME");
                 tables.put(tableName, this.getTableData(tableName, statement));
             }
+
             return tables;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -66,7 +68,6 @@ public class DatabaseConnection {
     private List<Map<String, String>> getTableData(String name, Statement statement) {
         try {
             List<Map<String, String>> tableData = new ArrayList<>();
-
             ResultSet rs = statement.executeQuery("select * from " + name);
 
             // Get the set of column names
@@ -85,6 +86,7 @@ public class DatabaseConnection {
                 }
                 tableData.add(row);
             }
+
             return tableData;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -95,6 +97,7 @@ public class DatabaseConnection {
     /**
      * Closes the connection to the database.
      */
+    @Override
     public void close() {
         try {
             if (connection != null) {

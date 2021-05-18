@@ -18,19 +18,16 @@ public interface GameState extends Serializable {
 
     void initiateState();
     void loadState(String loadInfo);
-    void loadState(Maze maze,
-                   Map<Room,Question> questions,
-                   Set<Room> unlockedRooms,
-                   Room currentRoom);
     void saveState(String saveInfo);
 
     Maze getMaze();
-    // Map<Room, Question> getQuestions();
-    Question getQuestion(Room room);
+    Map<Room, Question> getQuestions();
+    Question getRoomQuestion(Room room);
 
     Room getCurrentRoom();
     Set<Room> getCurrentNeighbors();
     void moveToRoom(Room newRoom);
+    int getDistanceToEnd(Room room);
 
     void unlockRoom(Room room);
     boolean isUnlocked(Room room);

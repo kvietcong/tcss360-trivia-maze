@@ -3,7 +3,9 @@ package maze;
 public class RoomSimple extends AbstractRoom {
     private final int id;
 
-    public RoomSimple(int id) { this.id = id; }
+    public RoomSimple(int id) {
+        this.id = id;
+    }
 
     @Override
     public int hashCode() { return id; }

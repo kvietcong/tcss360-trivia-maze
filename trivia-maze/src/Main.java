@@ -4,6 +4,7 @@ import maze.MazeGraph;
 import maze.Room;
 import maze.RoomSimple;
 import question.Question;
+import question.QuestionFactory;
 import question.QuestionTF;
 import state.GameState;
 import state.GameStateSimple;

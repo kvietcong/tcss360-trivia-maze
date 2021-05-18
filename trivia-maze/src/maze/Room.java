@@ -1,5 +1,7 @@
 package maze;
 
+import question.Question;
+
 import java.io.Serializable;
 
 public interface Room extends Serializable {

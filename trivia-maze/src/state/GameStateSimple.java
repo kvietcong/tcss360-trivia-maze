@@ -20,6 +20,7 @@ public class GameStateSimple implements GameState {
     private Room currentRoom;
     private Set<Room> unlockedRooms;
     private Map<Room, Question> questions;
+    private Map<Room, Integer> distanceFromEnd;
 
     private GameStateSimple() {
         propertyChangeSupport = new PropertyChangeSupport(this);

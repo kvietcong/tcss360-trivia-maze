@@ -3,7 +3,7 @@ package database;
 import java.sql.*;
 import java.util.*;
 
-public class DatabaseConnection implements Database{
+public class DatabaseConnection implements Database {
 
     private Connection connection;
 

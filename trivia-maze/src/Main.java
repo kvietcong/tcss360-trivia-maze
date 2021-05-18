@@ -1,129 +1,17 @@
-import gui.QuestionChoicePanel;
-import maze.Maze;
-import maze.MazeGraph;
-import maze.Room;
-import maze.RoomSimple;
-import question.Question;
-import question.QuestionFactory;
-import question.QuestionTF;
-import state.GameState;
-import state.GameStateSimple;
+import gui.MainMenu;
 
 import javax.swing.*;
-import java.awt.*;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.*;
 
 public class Main {
+    private JFrame frame;
     public static void main(String[] args) {
-        // All current code is for testing purposes
-	    System.out.println("Hello World!");
-
-        Question testQ = new QuestionTF("You are ok.", "false");
-        JLabel question = new JLabel(testQ.getQuestion());
-        JLabel prompt = new JLabel(String.join(" or ", testQ.getChoices()) + "?");
-        JButton trueButton = new JButton(testQ.getChoices()[0]);
-        JButton falseButton = new JButton(testQ.getChoices()[1]);
-
-        JPanel panel = new JPanel(new FlowLayout());
-        panel.add(question);
-        panel.add(prompt);
-        panel.add(trueButton);
-        panel.add(falseButton);
-
-        JLabel correctLabel = new JLabel();
-        panel.add(correctLabel);
-
-        trueButton.addActionListener(event -> {
-            boolean isSolved = testQ.isCorrectAnswer(trueButton.getText());
-            correctLabel.setText(
-                     isSolved ? "You are right" : "You are wrong");
-            trueButton.setEnabled(!isSolved);
-            falseButton.setEnabled(!isSolved);
-        });
-        falseButton.addActionListener(event -> {
-            boolean isSolved = testQ.isCorrectAnswer(falseButton.getText());
-            correctLabel.setText(
-                    isSolved ? "You are right" : "You are wrong");
-            trueButton.setEnabled(!isSolved);
-            falseButton.setEnabled(!isSolved);
-        });
-
-        JButton resetButton = new JButton("Reset");
-        resetButton.addActionListener(event -> {
-            if (!trueButton.isEnabled()) {
-                trueButton.setEnabled(true);
-                falseButton.setEnabled(true);
-                correctLabel.setText("");
-            }
-        });
-        panel.add(resetButton);
-
-        JFrame frame = new JFrame("Basic UI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1280,720);
-        frame.add(panel);
-        frame.setVisible(true);
-
-        Room room1 = new RoomSimple(1);
-        Room room2 = new RoomSimple(2);
-        Room room3 = new RoomSimple(3);
-
-        Set<Room> rooms1 = new HashSet<>();
-        rooms1.add(room2);
-        rooms1.add(room3);
-        Set<Room> rooms2 = new HashSet<>();
-        rooms2.add(room1);
-        Set<Room> rooms3 = new HashSet<>();
-        rooms3.add(room1);
-
-        Map<Room, Set<Room>> rooms = new HashMap<>();
-        rooms.put(room1, rooms1);
-        rooms.put(room2, rooms2);
-        rooms.put(room3, rooms3);
-
-        Maze maze = new MazeGraph(rooms);
-        maze.forEach(room -> {
-            var neighbors = maze.getNeighbors(room);
-            StringBuilder res = new StringBuilder(" {{ Neighbors:");
-            for (var neighbor : neighbors) {
-                res.append(" ").append(neighbor);
-            }
-            res.append(" }}");
-            System.out.println(room + res.toString());
-        });
-
-        try {
-            System.out.println(serializableToString(maze));
-        } catch (IOException ignored) { }
-
-        // Game State
-        GameState gameState = GameStateSimple.getInstance();
-
-        Map<Room, Question> questions = new HashMap<>();
-        maze.forEach(room -> {
-            questions.put(room, testQ);
-        });
-
-        Room start = maze.getRooms().iterator().next();
-        gameState.loadState(maze, questions,
-                new HashSet<>(Collections.singleton(start)), start);
-
-        JFrame frame2 = new JFrame("Testing");
-        frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame2.setSize(1280,720);
-        frame2.add(new QuestionChoicePanel(testQ, gameState));
-        frame2.setVisible(true);
+        new Main();
     }
 
-    private static String serializableToString(Serializable o) throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(byteArrayOutputStream);
-        oos.writeObject(o);
-        oos.close();
-        return Base64.getEncoder().encodeToString(byteArrayOutputStream.toByteArray());
+    public Main(){
+        frame = new MainMenu();
+        frame.setBounds(200,10,1000,650);
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }

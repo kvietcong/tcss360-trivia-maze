@@ -66,7 +66,7 @@ public class QuestionChoicePanel extends JPanel implements PropertyChangeListene
      */
     @Override
     public void propertyChange(PropertyChangeEvent event) {
-        // Do something on the MOVE event
+        // Do something on the ANSWER event
         if (ANSWER.toString().equals(event.getPropertyName())) {
             final Room newRoom = (Room) event.getNewValue();
             final Question newQuestion = gameState.getQuestion(newRoom);

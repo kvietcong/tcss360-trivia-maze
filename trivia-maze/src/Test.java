@@ -89,9 +89,13 @@ public class Test {
         Map<Room, Question> questions = new HashMap<>();
         maze.forEach(room -> questions.put(room, testQ));
 
+        Map<Room, GameState.RoomState> roomStates = new HashMap<>();
+        maze.forEach(room -> roomStates.put(room, GameState.RoomState.UNKNOWN));
+
         GameState state = GameStateSimple.getInstance();
         GameStateSimple gameState = (GameStateSimple) state;
-        gameState.loadState(maze, room0, room9, room0, new HashSet<>(), questions);
+        gameState.setState(maze, room0, room9, room0, roomStates, questions);
+        state.setRoomState(room0, GameState.RoomState.UNLOCKED);
 
         gameState.getMaze().getRooms().forEach(room ->
                 System.out.println(room + ": " + gameState.getDistanceToEnd(room) + " units away from the end"));

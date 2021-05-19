@@ -15,6 +15,7 @@ import java.util.Set;
 
 public interface GameState extends Serializable {
     enum GameEvent { MOVE, ANSWER, UNLOCK }
+    enum RoomState { LOCKED, UNLOCKED, UNKNOWN }
 
     void initiateState();
     void loadState(String loadInfo);
@@ -25,13 +26,12 @@ public interface GameState extends Serializable {
     Question getRoomQuestion(Room room);
 
     Room getCurrentRoom();
-    Set<Room> getCurrentNeighbors();
     void moveToRoom(Room newRoom);
+    Set<Room> getCurrentNeighbors();
     int getDistanceToEnd(Room room);
 
-    void unlockRoom(Room room);
-    boolean isUnlocked(Room room);
-    Set<Room> getUnlockedRooms();
+    RoomState checkRoomState(Room room);
+    void setRoomState(Room room, RoomState state);
 
     void addPropertyChangeListener(final PropertyChangeListener theListener);
     void addPropertyChangeListener(final GameEvent event,

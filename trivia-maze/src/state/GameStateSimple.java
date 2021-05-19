@@ -7,8 +7,10 @@ import java.util.*;
 import maze.Maze;
 import maze.Room;
 import question.Question;
+import state.GameState.RoomState.*;
 
 import static state.GameState.GameEvent.*;
+import static state.GameState.RoomState.*;
 
 public class GameStateSimple implements GameState {
     private static final GameState STATE = new GameStateSimple();
@@ -19,12 +21,50 @@ public class GameStateSimple implements GameState {
     private Room endRoom;
     private Room startRoom;
     private Room currentRoom;
-    private Set<Room> unlockedRooms;
     private Map<Room, Question> questions;
+    private Map<Room, RoomState> roomStates;
     private Map<Room, Integer> distancesToEndRoom;
 
     private GameStateSimple() {
         propertyChangeSupport = new PropertyChangeSupport(this);
+    }
+
+    public static GameState getInstance() { return STATE; }
+
+    public void loadState(String loadInfo) {
+        calculatePaths();
+    }
+
+    public Maze getMaze() { return maze; }
+    public Room getEndRoom() { return endRoom; }
+    public Room getStartRoom() { return startRoom; }
+    public Room getCurrentRoom() { return currentRoom; }
+    public Map<Room, Question> getQuestions() { return questions; }
+    public int getDistanceToEnd(Room room) { return distancesToEndRoom.getOrDefault(room, -1); }
+
+    // TODO: Saving
+    public void saveState(String saveInfo) { }
+    // TODO: Preload or Generate a new Maze
+    public void initiateState() { }
+
+
+    public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
+
+    public void moveToRoom(Room newRoom) {
+        Room oldRoom = currentRoom;
+        currentRoom = newRoom;
+        propertyChangeSupport.firePropertyChange(MOVE.toString(), oldRoom, newRoom);
+    }
+
+    public Set<Room> getNeighbors(Room room) { return maze.getNeighbors(room); }
+    public Set<Room> getCurrentNeighbors() { return getNeighbors(currentRoom); }
+
+    public RoomState checkRoomState(Room room) {
+        return roomStates.getOrDefault(room, UNKNOWN);
+    }
+
+    public void setRoomState(Room room, RoomState state) {
+        roomStates.put(room, state);
     }
 
     private void calculatePaths() {
@@ -57,51 +97,6 @@ public class GameStateSimple implements GameState {
         });
     }
 
-    public static GameState getInstance() { return STATE; }
-
-    public void loadState(String loadInfo) { }
-    public void loadState(Maze maze, Room startRoom, Room endRoom, Room currentRoom,
-                          Set<Room> unlockedRooms, Map<Room, Question> questions) {
-        this.maze = maze;
-        this.endRoom = endRoom;
-        this.startRoom = startRoom;
-        this.questions = questions;
-        this.currentRoom = currentRoom;
-        this.unlockedRooms = unlockedRooms;
-
-        calculatePaths();
-    }
-
-    public Maze getMaze() { return maze; }
-    public Room getEndRoom() { return endRoom; }
-    public Room getStartRoom() { return startRoom; }
-    public Room getCurrentRoom() { return currentRoom; }
-    public Map<Room, Question> getQuestions() { return questions; }
-    public int getDistanceToEnd(Room room) { return distancesToEndRoom.getOrDefault(room, -1); }
-
-    // TODO: Saving
-    public void saveState(String saveInfo) { }
-    // TODO: Preload or Generate a new Maze
-    public void initiateState() { }
-
-
-    public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
-
-    public void moveToRoom(Room newRoom) {
-        Room oldRoom = currentRoom;
-        currentRoom = newRoom;
-        propertyChangeSupport.firePropertyChange(MOVE.toString(), oldRoom, newRoom);
-    }
-
-    public Set<Room> getNeighbors(Room room) { return maze.getNeighbors(room); }
-    public Set<Room> getCurrentNeighbors() { return getNeighbors(currentRoom); }
-
-    public Set<Room> getUnlockedRooms() { return unlockedRooms; }
-
-    public boolean isUnlocked(Room room) { return unlockedRooms.contains(room); }
-
-    public void unlockRoom(Room room) { unlockedRooms.add(room); }
-
     public void addPropertyChangeListener(final PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
@@ -118,5 +113,18 @@ public class GameStateSimple implements GameState {
     public void removePropertyChangeListener(final GameEvent event,
                                              final PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(event.toString(), listener);
+    }
+
+    // TODO: BELOW HERE IS FOR TESTING. DELETE WHEN DONE
+    public void setState(Maze maze, Room startRoom, Room endRoom, Room currentRoom,
+                         Map<Room, RoomState> roomStates, Map<Room, Question> questions) {
+        this.maze = maze;
+        this.endRoom = endRoom;
+        this.startRoom = startRoom;
+        this.questions = questions;
+        this.roomStates = roomStates;
+        this.currentRoom = currentRoom;
+
+        calculatePaths();
     }
 }

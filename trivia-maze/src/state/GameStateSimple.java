@@ -7,7 +7,6 @@ import java.util.*;
 import maze.Maze;
 import maze.Room;
 import question.Question;
-import state.GameState.RoomState.*;
 
 import static state.GameState.GameEvent.*;
 import static state.GameState.RoomState.*;

@@ -1,3 +1,5 @@
+package test;
+
 import maze.Maze;
 import maze.MazeGraph;
 import maze.Room;

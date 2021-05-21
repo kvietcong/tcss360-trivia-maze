@@ -46,7 +46,7 @@ public class TriviaDatabaseConnection implements Database {
 
     public static void main(String[] args)
     {
-        // Test getting a connection to the trivia database and print the content
+        // test.Test getting a connection to the trivia database and print the content
         TriviaDatabaseConnection tdbc = TriviaDatabaseConnection.getConnection();
         List<Map<String, String>> questions = tdbc.getData().get("questions");
         for (Map<String, String> q : questions) {

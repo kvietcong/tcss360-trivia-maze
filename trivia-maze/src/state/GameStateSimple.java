@@ -12,42 +12,57 @@ import static state.GameState.GameEvent.*;
 import static state.GameState.RoomState.*;
 
 public class GameStateSimple implements GameState {
+    /** Singleton instance of the game state */
     private static final GameState STATE = new GameStateSimple();
 
+    /** Object to handle the event firing and listening. */
     private final PropertyChangeSupport propertyChangeSupport;
 
+    /** The state's game maze */
     private Maze maze;
+    /** The end (finishing) room. */
     private Room endRoom;
+    /** The room where a new player starts. */
     private Room startRoom;
+    /** The room where the player is currently residing. */
     private Room currentRoom;
+    /** All the questions and the associated room. */
     private Map<Room, Question> questions;
+    /** All the room states and the associated room. */
     private Map<Room, RoomState> roomStates;
+    /** All room distances from every room to the end. */
     private Map<Room, Integer> distancesToEndRoom;
 
-    private GameStateSimple() {
-        propertyChangeSupport = new PropertyChangeSupport(this);
-    }
-
-    public static GameState getInstance() { return STATE; }
-
-    public void loadState(String loadInfo) {
-        calculatePaths();
-    }
+    /** Initializes a new Game State Object with event firing support. */
+    private GameStateSimple() { propertyChangeSupport = new PropertyChangeSupport(this); }
 
     public Maze getMaze() { return maze; }
     public Room getEndRoom() { return endRoom; }
     public Room getStartRoom() { return startRoom; }
     public Room getCurrentRoom() { return currentRoom; }
+    public static GameState getInstance() { return STATE; }
     public Map<Room, Question> getQuestions() { return questions; }
+    public Set<Room> getNeighbors(Room room) { return maze.getNeighbors(room); }
+    public Set<Room> getCurrentNeighbors() { return getNeighbors(currentRoom); }
+    public void setRoomState(Room room, RoomState state) { roomStates.put(room, state); }
+    public RoomState checkRoomState(Room room) { return roomStates.getOrDefault(room, UNKNOWN); }
+    public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
     public int getDistanceToEnd(Room room) { return distancesToEndRoom.getOrDefault(room, -1); }
 
-    // TODO: Saving
-    public void saveState(String saveInfo) { }
     // TODO: Preload or Generate a new Maze
-    public void initiateState() { }
+    public void initiateState() {
+        calculatePaths();
+    }
 
+    // TODO: Saving State
+    public void saveState(String saveInfo) {
 
-    public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
+    }
+
+    // TODO: Loading State
+    public void loadState(String loadInfo) {
+        calculatePaths();
+    }
 
     public void moveToRoom(Room newRoom) {
         Room oldRoom = currentRoom;
@@ -55,22 +70,48 @@ public class GameStateSimple implements GameState {
         propertyChangeSupport.firePropertyChange(MOVE.toString(), oldRoom, newRoom);
     }
 
-    public Set<Room> getNeighbors(Room room) { return maze.getNeighbors(room); }
-    public Set<Room> getCurrentNeighbors() { return getNeighbors(currentRoom); }
-
-    public RoomState checkRoomState(Room room) {
-        return roomStates.getOrDefault(room, UNKNOWN);
-    }
-
-    public void setRoomState(Room room, RoomState state) {
-        roomStates.put(room, state);
-    }
 
     private void calculatePaths() {
-        // OH GOODNESS THE TIME COMPLEXITY!!!!!!!!!!!!
         distancesToEndRoom = new HashMap<>();
+
+        Map<Room, Set<Room>> reversedMaze = new HashMap<>();
+        maze.getRooms().forEach(room -> {
+            Set<Room> neighbors = getNeighbors(room);
+            neighbors.forEach(neighbor -> {
+                Set<Room> reversedNeighbors = reversedMaze.getOrDefault(neighbor, new HashSet<>());
+                reversedNeighbors.add(room);
+                reversedMaze.put(neighbor, reversedNeighbors);
+            });
+        });
+
+        Queue<Room> toSearch = new LinkedList<>();
+        Set<Room> searched = new HashSet<>();
+
+        toSearch.add(endRoom);
+        searched.add(endRoom);
         distancesToEndRoom.put(endRoom, 0);
 
+        while (!toSearch.isEmpty()) {
+            Room currentRoom = toSearch.poll();
+            Set<Room> neighbors = reversedMaze.get(currentRoom);
+            for (Room neighbor : neighbors) {
+                if (!searched.contains(neighbor)) {
+                    toSearch.add(neighbor);
+                    searched.add(neighbor);
+                    distancesToEndRoom.put(neighbor, distancesToEndRoom.get(currentRoom) + 1);
+                    if (neighbor.equals(endRoom)) { break; }
+                }
+            }
+        }
+
+        /* OH GOODNESS THE TIME COMPLEXITY!!!!!!!!!!!!
+         * So this code below here goes through every node in the graph and does BFS on EACH ONE
+         * to find the distance to the end. This means the time complexity is O(V^2 + VE) where
+         * V is the amount of vertices and E is the amount of Edges
+         * I will keep this as a remainder of my failure
+         * - KV Le
+         */
+        /*
         maze.getRooms().stream().filter(room -> !room.equals(endRoom)).forEach(room -> {
             Map<Room, Integer> distanceTo = new HashMap<>();
             Queue<Room> toSearch = new LinkedList<>();
@@ -87,34 +128,35 @@ public class GameStateSimple implements GameState {
                     if (!searched.contains(neighbor)) {
                         toSearch.add(neighbor);
                         searched.add(neighbor);
-                        distanceTo.put(neighbor, distanceTo.getOrDefault(currentRoom, 0) + 1);
+                        distanceTo.put(neighbor, distanceTo.get(currentRoom) + 1);
                         if (neighbor.equals(endRoom)) { break; }
                     }
                 }
             }
             distancesToEndRoom.put(room, distanceTo.getOrDefault(endRoom, -1));
         });
+        distancesToEndRoom.put(endRoom, 0);
+        */
     }
 
     public void addPropertyChangeListener(final PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(listener);
     }
 
-    public void addPropertyChangeListener(final GameEvent event,
-                                          final PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(event.toString(), listener);
-    }
-
     public void removePropertyChangeListener(final PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
-    public void removePropertyChangeListener(final GameEvent event,
-                                             final PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(event.toString(), listener);
-    }
-
     // TODO: BELOW HERE IS FOR TESTING. DELETE WHEN DONE
+    /**
+     * DEBUG FUNCTION: Set the state of the maze manually.
+     * @param maze The maze to be set.
+     * @param startRoom The starting room.
+     * @param endRoom The ending room.
+     * @param currentRoom The current state's room.
+     * @param roomStates The states the rooms are in.
+     * @param questions The questions that are attached to the rooms.
+     */
     public void setState(Maze maze, Room startRoom, Room endRoom, Room currentRoom,
                          Map<Room, RoomState> roomStates, Map<Room, Question> questions) {
         this.maze = maze;

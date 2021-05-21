@@ -1,8 +1,13 @@
 package maze;
 
 public class RoomSimple extends AbstractRoom {
+    /** The unique identifier of this room. */
     private final int id;
 
+    /**
+     * Construct a new simple room.
+     * @param id The unique identifier of this room.
+     */
     public RoomSimple(int id) {
         this.id = id;
     }

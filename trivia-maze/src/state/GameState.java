@@ -14,30 +14,85 @@ import java.util.Map;
 import java.util.Set;
 
 public interface GameState extends Serializable {
+    /** Events that listeners can hook onto. */
     enum GameEvent { MOVE, ANSWER, UNLOCK }
+
+    /** What states a room can be in. */
     enum RoomState { LOCKED, UNLOCKED, UNKNOWN }
 
+    /** Generates a new default game. */
     void initiateState();
+
+    /**
+     * Load a game state given some info on what needs to be loaded.
+     * @param loadInfo Required information to load a specific game state.
+     */
     void loadState(String loadInfo);
+
+    /**
+     * Save a game state given some info on what needs to be saved.
+     * @param saveInfo Required information to save a specific game state.
+     */
     void saveState(String saveInfo);
 
+    /** Retrieves the maze of the current game state. */
     Maze getMaze();
+    /** Retrieves all the questions for each room of the current game state. */
     Map<Room, Question> getQuestions();
+
+    /**
+     * Retrieves the question of a given room.
+     * TODO: Rename to getQuestionRoom.
+     * @param room The room to be queried.
+     * @return The Question of the room or null if there is none.
+     */
     Question getRoomQuestion(Room room);
 
+    /** Retrieves the current room of the game state. */
     Room getCurrentRoom();
+
+    /**
+     * Move the current game state's room to the given new room.
+     * @param newRoom The new room to move to.
+     */
     void moveToRoom(Room newRoom);
+
+    /**
+     * Get the neighbors of the current game state's room.
+     * @return The neighbors of the current room.
+     */
     Set<Room> getCurrentNeighbors();
+
+    /**
+     * Get the amount of rooms away a given room is from the end.
+     * @param room Room to query for distance.
+     * @return How far away the given room is from the end. -1 is returned if there is no path.
+     */
     int getDistanceToEnd(Room room);
 
+    /**
+     * Check the state the given room is in.
+     * @param room The room meant to be checked.
+     * @return The state of the given room.
+     */
     RoomState checkRoomState(Room room);
+
+    /**
+     * Set the state of a given room.
+     * @param room The room that is meant to be changed.
+     * @param state The new state of the given room.
+     */
     void setRoomState(Room room, RoomState state);
 
+    /**
+     * Add a new object that will listen to changes.
+     * @param theListener The object that will now listen for game state events.
+     */
     void addPropertyChangeListener(final PropertyChangeListener theListener);
-    void addPropertyChangeListener(final GameEvent event,
-                                   final PropertyChangeListener theListener);
 
+    /**
+     * Remove an object that will listen to changes.
+     * @param theListener The object that will no longer listen for game state events.
+     */
     void removePropertyChangeListener(final PropertyChangeListener theListener);
-    void removePropertyChangeListener(final GameEvent event,
-                                      final PropertyChangeListener theListener);
 }

@@ -3,14 +3,18 @@ package maze;
 import java.util.*;
 
 public class MazeArray extends AbstractMaze {
+    /** The maze in graph form */
     private final Room[][] rooms;
 
-    public MazeArray(Room[][] rooms) { this.rooms = rooms; }
+    /**
+     * Construct a new maze object.
+     * @param maze The new maze.
+     */
+    public MazeArray(Room[][] maze) { this.rooms = maze; }
 
     @Override
     public Set<Room> getRooms() {
-        //return new HashSet<>(Arrays.stream(rooms).flatMap(Arrays::stream).toList());
-        return null;
+        return new HashSet<>(Arrays.stream(rooms).flatMap(Arrays::stream).toList());
     }
 
     @Override

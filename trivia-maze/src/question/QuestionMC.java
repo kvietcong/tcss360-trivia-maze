@@ -1,7 +1,13 @@
 package question;
 
 public final class QuestionMC extends AbstractQuestion {
-    public QuestionMC(String question, String[] prompt, String answer) {
-        super(QuestionType.MC, question, prompt, answer);
+    /**
+     * Create a Multiple Choice question
+     * @param question The question to be asked.
+     * @param choices The available choices.
+     * @param answer The answer.
+     */
+    public QuestionMC(String question, String[] choices, String answer) {
+        super(QuestionType.MC, question, choices, answer);
     }
 }

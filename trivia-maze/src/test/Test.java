@@ -87,7 +87,7 @@ public class Test {
 
         Maze maze = new MazeGraph(rooms);
 
-        Question testQ = new QuestionTF("You are ok.", "false");
+        Question testQ = new QuestionTF("You are ok.", new String[] { "you", "health" }, "false");
         Map<Room, Question> questions = new HashMap<>();
         maze.forEach(room -> questions.put(room, testQ));
 

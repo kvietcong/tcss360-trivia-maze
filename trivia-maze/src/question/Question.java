@@ -23,6 +23,12 @@ public interface Question {
     String[] getChoices();
 
     /**
+     * Retrieve the topics the question falls under.
+     * @return The topics the question falls under.
+     */
+    String[] getTopics();
+
+    /**
      * Check if a given answer is correct (Case insensitive).
      * @param answer The answer to check
      * @return If the given answer is correct

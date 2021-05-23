@@ -15,7 +15,7 @@ import java.util.Set;
 
 public interface GameState extends Serializable {
     /** Events that listeners can hook onto. */
-    enum GameEvent { MOVE, ANSWER, UNLOCK }
+    enum GameEvent { MOVE, ANSWER, UNLOCK, SAVE, LOAD }
 
     /** What states a room can be in. */
     enum RoomState { LOCKED, UNLOCKED, UNKNOWN }
@@ -26,14 +26,16 @@ public interface GameState extends Serializable {
     /**
      * Load a game state given some info on what needs to be loaded.
      * @param loadInfo Required information to load a specific game state.
+     * @return If the operation was successful.
      */
-    void loadState(String loadInfo);
+    boolean loadState(String loadInfo);
 
     /**
      * Save a game state given some info on what needs to be saved.
      * @param saveInfo Required information to save a specific game state.
+     * @return If the operation was successful.
      */
-    void saveState(String saveInfo);
+    boolean saveState(String saveInfo);
 
     /** Retrieves the maze of the current game state. */
     Maze getMaze();

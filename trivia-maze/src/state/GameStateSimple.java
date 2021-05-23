@@ -2,6 +2,7 @@ package state;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.*;
 import java.util.*;
 
 import maze.Maze;
@@ -13,10 +14,10 @@ import static state.GameState.RoomState.*;
 
 public class GameStateSimple implements GameState {
     /** Singleton instance of the game state */
-    private static final GameState STATE = new GameStateSimple();
+    transient private static final GameState STATE = new GameStateSimple();
 
     /** Object to handle the event firing and listening. */
-    private final PropertyChangeSupport propertyChangeSupport;
+    transient private final PropertyChangeSupport propertyChangeSupport;
 
     /** The state's game maze */
     private Maze maze;
@@ -44,24 +45,62 @@ public class GameStateSimple implements GameState {
     public Map<Room, Question> getQuestions() { return questions; }
     public Set<Room> getNeighbors(Room room) { return maze.getNeighbors(room); }
     public Set<Room> getCurrentNeighbors() { return getNeighbors(currentRoom); }
-    public void setRoomState(Room room, RoomState state) { roomStates.put(room, state); }
     public RoomState checkRoomState(Room room) { return roomStates.getOrDefault(room, UNKNOWN); }
     public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
     public int getDistanceToEnd(Room room) { return distancesToEndRoom.getOrDefault(room, -1); }
 
-    // TODO: Preload or Generate a new Maze
+    public void setRoomState(Room room, RoomState state) {
+        roomStates.put(room, state);
+        calculatePaths();
+    }
+
     public void initiateState() {
         calculatePaths();
     }
 
-    // TODO: Saving State
-    public void saveState(String saveInfo) {
-
+    public boolean saveState(String savePath) {
+        try (FileOutputStream fileOut = new FileOutputStream(savePath)) {
+            try (ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
+                objectOut.writeObject(this);
+                propertyChangeSupport.firePropertyChange(
+                        SAVE.toString(), null, this);
+                return true;
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return false;
+        }
     }
 
-    // TODO: Loading State
-    public void loadState(String loadInfo) {
+    public boolean loadState(String loadPath) {
+        try (FileInputStream fileIn = new FileInputStream(loadPath)) {
+            try (ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
+                setState((GameStateSimple) objectIn.readObject());
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return false;
+        }
+
         calculatePaths();
+        return true;
+    }
+
+    /**
+     * Makes the current game state emulate the new one.
+     * (The current game state won't inherit things like the singleton
+     *  instance or the property change listener.)
+     * @param newState New State to emulate.
+     */
+    private void setState(GameStateSimple newState) {
+        endRoom = newState.endRoom;
+        startRoom = newState.startRoom;
+        currentRoom = newState.currentRoom;
+        questions = newState.questions;
+        roomStates = newState.roomStates;
+        distancesToEndRoom = newState.distancesToEndRoom;
+        propertyChangeSupport.firePropertyChange(
+                LOAD.toString(), null, this);
     }
 
     public void moveToRoom(Room newRoom) {

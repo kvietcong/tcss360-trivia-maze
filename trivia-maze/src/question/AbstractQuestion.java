@@ -13,6 +13,9 @@ public abstract class AbstractQuestion implements Question {
     /** The answer for the question. */
     private final String answer;
 
+    /** The topics for this question. */
+    private final String[] topics;
+
     /**
      * Setup a general question with different pieces.
      * @param type The type of the question.
@@ -20,14 +23,17 @@ public abstract class AbstractQuestion implements Question {
      * @param choices The choices available to the question.
      * @param answer The answer of the question.
      */
-    protected AbstractQuestion(QuestionType type, String question, String[] choices, String answer) {
+    protected AbstractQuestion(QuestionType type, String[] topics,
+                               String question, String[] choices, String answer) {
         this.type = type;
         this.question = question;
         this.choices = choices;
         this.answer = answer;
+        this.topics = topics;
     }
 
     public QuestionType getType() { return type; }
+    public String[] getTopics() { return topics; }
     public String getQuestion() { return question; }
     public String[] getChoices() { return choices; }
     public boolean isCorrectAnswer(String answer) {

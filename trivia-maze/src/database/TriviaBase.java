@@ -43,6 +43,7 @@ public class TriviaBase {
             questionsList.add(
                     QuestionFactory.createQuestion(
                         q.get("question"),
+                        q.get("topics").split("\\|"),
                         q.get("choices").split("\\|"),
                         q.get("answer"),
                         q.get("type")
@@ -72,10 +73,10 @@ public class TriviaBase {
     public List<Question> getRandomQuestions(int n) {
         checkForRefresh(n);
         List<Question> questionsList = new ArrayList<>();
-        if (n > this.currentQuestions.size()) {
-            n = this.currentQuestions.size();
-        }
-        for (int i = 0; i < n; n++) {
+        for (int i = 0; i < n; i++) {
+            // In case of small question pools, this ensures that the pool will refresh until the requested
+            // number of questions have been selected.
+            checkForRefresh(n - i);
             int index = random.nextInt(currentQuestions.size());
             Question remove = currentQuestions.get(index);
             currentQuestions.remove(index);
@@ -99,5 +100,21 @@ public class TriviaBase {
      */
     public void refresh() {
         this.currentQuestions = readQuestions(this.questionsInfo);
+    }
+
+    /**
+     * Testing method for TriviaBase class
+     * @param args Command line arguments
+     */
+    public static void main(String[] args) {
+        TriviaBase tb = new TriviaBase(TriviaDatabaseConnection.getConnection());
+        List<Question> questions = tb.getRandomQuestions(3);
+        System.out.println(questions);
+        System.out.println();
+        questions = tb.getRandomQuestions(1);
+        System.out.println(questions);
+        System.out.println();
+        questions = tb.getRandomQuestions(4);
+        System.out.println(questions);
     }
 }

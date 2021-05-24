@@ -18,7 +18,7 @@ public class DatabaseUploader {
             statement.setQueryTimeout(30);
 
             statement.executeUpdate("drop table if exists questions");
-            statement.executeUpdate("create table questions (id integer, question string, choices string, answer string, type string)");
+            statement.executeUpdate("create table questions (id integer, question string, choices string, answer string, type string, topics string)");
 
             int count = 1;
             while (input.hasNextLine()) {
@@ -26,10 +26,11 @@ public class DatabaseUploader {
                 String choices = input.nextLine();
                 String answer = input.nextLine();
                 String type = input.nextLine();
+                String topics = input.nextLine();
                 statement.executeUpdate(
                         String.format(
-                                "insert into questions values('%s', '%s', '%s', '%s', '%s')",
-                                count, question, choices, answer, type
+                                "insert into questions values('%s', '%s', '%s', '%s', '%s', '%s')",
+                                count, question, choices, answer, type, topics
                         )
                 );
                 count++;

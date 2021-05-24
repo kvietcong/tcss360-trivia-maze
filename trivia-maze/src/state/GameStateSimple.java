@@ -10,7 +10,6 @@ import maze.Room;
 import question.Question;
 
 import static state.GameState.GameEvent.*;
-import static state.GameState.RoomState.*;
 
 public class GameStateSimple implements GameState {
     /** Singleton instance of the game state */
@@ -45,7 +44,7 @@ public class GameStateSimple implements GameState {
     public Map<Room, Question> getQuestions() { return questions; }
     public Set<Room> getNeighbors(Room room) { return maze.getNeighbors(room); }
     public Set<Room> getCurrentNeighbors() { return getNeighbors(currentRoom); }
-    public RoomState checkRoomState(Room room) { return roomStates.getOrDefault(room, UNKNOWN); }
+    public RoomState checkRoomState(Room room) { return roomStates.getOrDefault(room, null); }
     public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
     public int getDistanceToEnd(Room room) { return distancesToEndRoom.getOrDefault(room, -1); }
 

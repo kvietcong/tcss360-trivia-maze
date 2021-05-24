@@ -14,8 +14,8 @@ import java.util.Random;
  * to prevent duplicates.
  */
 public class TriviaBase {
+    private static final Random RANDOM = new Random();
 
-    private final Random random = new Random();
     private final List<Map<String, String>> questionsInfo;
     private final List<Question> questions;
     private List<Question> currentQuestions;
@@ -59,7 +59,7 @@ public class TriviaBase {
      */
     public Question getRandomQuestion() {
         checkForRefresh(1);
-        int index = random.nextInt(currentQuestions.size());
+        int index = RANDOM.nextInt(currentQuestions.size());
         Question remove = currentQuestions.get(index);
         currentQuestions.remove(index);
         return remove;
@@ -77,7 +77,7 @@ public class TriviaBase {
             // In case of small question pools, this ensures that the pool will refresh until the requested
             // number of questions have been selected.
             checkForRefresh(n - i);
-            int index = random.nextInt(currentQuestions.size());
+            int index = RANDOM.nextInt(currentQuestions.size());
             Question remove = currentQuestions.get(index);
             currentQuestions.remove(index);
             questionsList.add(remove);

@@ -1,9 +1,12 @@
 Are you good?
 True|False
 True
+TF
 Are you sure?
 Yes|No|Maybe|I don''t know
 Yes
+MC
 What is your favorite color?
 Blue|No, gre-|AHHH
 AHHH
+MC

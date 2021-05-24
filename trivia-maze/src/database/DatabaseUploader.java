@@ -7,7 +7,7 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class DatabaseUploader {
-    public static void main(String[] args) throws SQLException, FileNotFoundException {
+    public static void main(String[] args) throws FileNotFoundException {
         Scanner input = new Scanner(new File("src/database/trivia_questions.txt"));
 
         Connection conn = null;
@@ -18,17 +18,18 @@ public class DatabaseUploader {
             statement.setQueryTimeout(30);
 
             statement.executeUpdate("drop table if exists questions");
-            statement.executeUpdate("create table questions (id integer, question string, choices string, answer string)");
+            statement.executeUpdate("create table questions (id integer, question string, choices string, answer string, type string)");
 
             int count = 1;
             while (input.hasNextLine()) {
                 String question = input.nextLine();
                 String choices = input.nextLine();
                 String answer = input.nextLine();
+                String type = input.nextLine();
                 statement.executeUpdate(
                         String.format(
-                                "insert into questions values('%s', '%s', '%s', '%s')",
-                                count, question, choices, answer
+                                "insert into questions values('%s', '%s', '%s', '%s', '%s')",
+                                count, question, choices, answer, type
                         )
                 );
                 count++;
@@ -38,6 +39,5 @@ public class DatabaseUploader {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-
     }
 }

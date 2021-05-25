@@ -101,5 +101,7 @@ public class Test {
 
         gameState.getMaze().getRooms().forEach(room ->
                 System.out.println(room + ": " + gameState.getDistanceToEnd(room) + " units away from the end"));
+
+        gameState.saveState("./test.maze");
     }
 }

@@ -5,8 +5,6 @@ import state.GameState;
 import state.GameStateSimple;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
-import java.awt.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -290,13 +288,13 @@ public class MazePanel extends JPanel {
         add(btn2);
         add(btn3);
         add(btn4);
-        createroom();
+        createRoom();
         add(labelroom1);
         add(labelroom2);
         setVisible(true);
     }
     /**Creates room */
-    private void createroom(){
+    private void createRoom(){
         Set<Room> rooms0 = new HashSet<>();
         rooms0.add(room1);
         rooms0.add(room2);
@@ -312,6 +310,8 @@ public class MazePanel extends JPanel {
         rooms.put(room2, rooms2);
 
         maze = new MazeGraph(rooms);
+        GameState state = GameStateSimple.getInstance();
+        state.loadState("./test.maze");
         maze.forEach(room -> {
             var neighbors = maze.getNeighbors(room);
 
@@ -324,14 +324,10 @@ public class MazePanel extends JPanel {
             labelroom1 = new JLabel(res.toString());
             labelroom1.setBounds(20,20,40,30);
         });
-        GameState state = GameStateSimple.getInstance();
-        state.loadState(maze, null, maze.getRooms(), room);
 
         labelroom2 = new JLabel(String.valueOf(state.getCurrentRoom()));
         labelroom2.setBounds(100,20,30,40);
         labelroom3 = new JLabel(String.valueOf(state.getCurrentNeighbors()));
         labelroom3.setBounds(20,40,30,20);
     }
-    }//end of class
-
-
+    }

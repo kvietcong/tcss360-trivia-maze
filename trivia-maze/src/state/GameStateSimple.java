@@ -75,13 +75,13 @@ public class GameStateSimple implements GameState {
         try (FileInputStream fileIn = new FileInputStream(loadPath)) {
             try (ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
                 setState((GameStateSimple) objectIn.readObject());
+                calculatePaths();
             }
         } catch (Exception exception) {
             exception.printStackTrace();
             return false;
         }
 
-        calculatePaths();
         return true;
     }
 
@@ -92,6 +92,7 @@ public class GameStateSimple implements GameState {
      * @param newState New State to emulate.
      */
     private void setState(GameStateSimple newState) {
+        maze = newState.maze;
         endRoom = newState.endRoom;
         startRoom = newState.startRoom;
         currentRoom = newState.currentRoom;

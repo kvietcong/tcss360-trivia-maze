@@ -1,6 +1,8 @@
 package question;
 
-public interface Question {
+import java.io.Serializable;
+
+public interface Question extends Serializable {
     /** The different types of questions available to the program. */
     enum QuestionType { MC, TF, SA }
 

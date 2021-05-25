@@ -1,11 +1,20 @@
 import gui.MainMenu;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
-    private JFrame frame;
+    /**The main frame GUI */
+    private final JFrame frame;
+
     public static void main(String[] args) {
-        new Main();
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                new Main();
+            }
+        });
+
     }
 
     public Main(){

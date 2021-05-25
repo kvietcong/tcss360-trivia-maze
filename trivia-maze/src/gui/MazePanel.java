@@ -1,10 +1,19 @@
 package gui;
 
+import maze.*;
+import state.GameState;
+import state.GameStateSimple;
+
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class MazePanel extends JPanel {
-
+    /*Maze maze;
     private final ImageIcon emptyroom;
     private final ImageIcon horizontalline;
     private final ImageIcon verticalline;
@@ -58,7 +67,7 @@ public class MazePanel extends JPanel {
     public MazePanel() {
         setLayout(null);
 
-        emptyroom = new ImageIcon(MazePanel.class.getResource("/images/emptyroom.PNG"));
+        emptyroom = new ImageIcon(MazePanel.class.getResource("/images/emptyroom.png"));
         horizontalline = new ImageIcon(MazePanel.class.getResource("/images/Lines.png"));
         verticalline = new ImageIcon(MazePanel.class.getResource("/images/Vertical.png"));
         flag = new ImageIcon(MazePanel.class.getResource("/images/Flag.png"));
@@ -246,6 +255,82 @@ public class MazePanel extends JPanel {
         add(verticalpath4);
         add(name);
 
+    }*/
+
+    /**The maze*/
+    private Maze maze;
+    /**The roms*/
+    private Room room;
+    private Room room1;
+    private Room room2;
+    /**The room buttons*/
+    private JButton btn1;
+    private  JButton btn2;
+    private  JButton btn3;
+    private JButton btn4;
+    /**The room labels*/
+    private  JLabel labelroom1;
+    private  JLabel labelroom2;
+    private  JLabel labelroom3;
+    /**Initializes the components*/
+    public MazePanel() {
+        room = new RoomSimple(0);
+        room1 = new RoomSimple(1);
+        room2 = new RoomSimple(2);
+        btn1 = new JButton("Room 0");
+        btn2 = new JButton("Room 1");
+        btn3 = new JButton("Room 2");
+        btn4 = new JButton("Room 3");
+
+        btn1.setBounds(100,20,60,40);
+        btn2.setBounds(150,30,60,40);
+        btn3.setBounds(300,80,60,40);
+        btn4.setBounds(250,50,60,40);
+        add(btn1);
+        add(btn2);
+        add(btn3);
+        add(btn4);
+        createroom();
+        add(labelroom1);
+        add(labelroom2);
+        setVisible(true);
+    }
+    /**Creates room */
+    private void createroom(){
+        Set<Room> rooms0 = new HashSet<>();
+        rooms0.add(room1);
+        rooms0.add(room2);
+        Set<Room> rooms1 = new HashSet<>();
+        rooms1.add(room);
+        rooms1.add(room1);
+        Set<Room> rooms2 = new HashSet<>();
+        rooms2.add(room1);
+        rooms1.add(room);
+        Map<Room, Set<Room>> rooms = new HashMap<>();
+        rooms.put(room, rooms0);
+        rooms.put(room1, rooms1);
+        rooms.put(room2, rooms2);
+
+        maze = new MazeGraph(rooms);
+        maze.forEach(room -> {
+            var neighbors = maze.getNeighbors(room);
+
+            StringBuilder res = new StringBuilder("{{Neighbours:");
+            for (var neighbor : neighbors) {
+                res.append(" ").append(neighbor);
+            }
+            res.append("}}");
+
+            labelroom1 = new JLabel(res.toString());
+            labelroom1.setBounds(20,20,40,30);
+        });
+        GameState state = GameStateSimple.getInstance();
+        state.loadState(maze, null, maze.getRooms(), room);
+
+        labelroom2 = new JLabel(String.valueOf(state.getCurrentRoom()));
+        labelroom2.setBounds(100,20,30,40);
+        labelroom3 = new JLabel(String.valueOf(state.getCurrentNeighbors()));
+        labelroom3.setBounds(20,40,30,20);
     }
     }//end of class
 

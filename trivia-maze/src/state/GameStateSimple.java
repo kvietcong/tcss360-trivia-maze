@@ -134,7 +134,8 @@ public class GameStateSimple implements GameState {
             Room currentRoom = toSearch.poll();
             Set<Room> neighbors = reversedMaze.get(currentRoom);
             for (Room neighbor : neighbors) {
-                if (!searched.contains(neighbor)) {
+                if (!searched.contains(neighbor)
+                        && checkRoomState(neighbor) != RoomState.LOCKED) {
                     toSearch.add(neighbor);
                     searched.add(neighbor);
                     distancesToEndRoom.put(neighbor, distancesToEndRoom.get(currentRoom) + 1);

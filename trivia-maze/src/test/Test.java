@@ -98,6 +98,7 @@ public class Test {
         GameStateSimple gameState = (GameStateSimple) state;
         gameState.setState(maze, room0, room9, room0, roomStates, questions);
         state.setRoomState(room0, GameState.RoomState.UNLOCKED);
+        state.setRoomState(room1, GameState.RoomState.UNLOCKED);
 
         gameState.getMaze().getRooms().forEach(room ->
                 System.out.println(room + ": " + gameState.getDistanceToEnd(room) + " units away from the end"));

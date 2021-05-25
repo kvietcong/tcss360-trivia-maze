@@ -45,6 +45,8 @@ public class MainMenu extends JFrame {
     /**Action Listener for new game button.*/
     ActionListener newGamebtn = event -> {
         setContentPane(new GamePanel());
+        revalidate();
+        repaint();
     };
     /**Action Listener for options button.*/
     ActionListener optionsbtn = event -> {

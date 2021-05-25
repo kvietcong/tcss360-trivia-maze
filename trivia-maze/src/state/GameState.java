@@ -25,17 +25,17 @@ public interface GameState extends Serializable {
 
     /**
      * Load a game state given some info on what needs to be loaded.
-     * @param loadInfo Required information to load a specific game state.
+     * @param loadPath Required information to load a specific game state.
      * @return If the operation was successful.
      */
-    boolean loadState(String loadInfo);
+    boolean loadState(String loadPath);
 
     /**
      * Save a game state given some info on what needs to be saved.
-     * @param saveInfo Required information to save a specific game state.
+     * @param savePath Required information to save a specific game state.
      * @return If the operation was successful.
      */
-    boolean saveState(String saveInfo);
+    boolean saveState(String savePath);
 
     /** Retrieves the maze of the current game state. */
     Maze getMaze();

@@ -108,6 +108,9 @@ public class GameStateSimple implements GameState {
         Room oldRoom = currentRoom;
         currentRoom = newRoom;
         propertyChangeSupport.firePropertyChange(MOVE.toString(), oldRoom, newRoom);
+        if (currentRoom == endRoom) {
+            propertyChangeSupport.firePropertyChange(END.toString(), oldRoom, newRoom);
+        }
     }
 
     public void attemptQuestion(Room room, String answer) {
@@ -118,6 +121,7 @@ public class GameStateSimple implements GameState {
             setRoomState(room, RoomState.UNLOCKED);
             newState = RoomState.UNLOCKED;
         } else {
+            if (room.equals(endRoom)) { return; } // Make it so you can't lock the final room
             setRoomState(room, RoomState.LOCKED);
             newState = RoomState.LOCKED;
         }

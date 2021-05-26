@@ -23,10 +23,10 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
     private final Set<JRoomButton> lockedButtons = new HashSet<>();
     private final JLabel mazeTitle = new JLabel();
 
-    private JPanel mazePanel = new JPanel();
-    private JPanel mazeNeighborPanel = new JPanel();
+    private final JPanel mazePanel = new JPanel();
+    private final JPanel mazeNeighborPanel = new JPanel();
 
-    private JPanel triviaPanel = new JPanel();
+    private final JPanel triviaPanel = new JPanel();
     private JPanel triviaQuestionPanel = new JPanel();
 
     /**

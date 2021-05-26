@@ -15,7 +15,7 @@ import java.util.Set;
 
 public interface GameState extends Serializable {
     /** Events that listeners can hook onto. */
-    enum GameEvent { MOVE, ANSWER, UNLOCK, SAVE, LOAD }
+    enum GameEvent { MOVE, ROOM_CHANGE, SAVE, LOAD }
 
     /** What states a room can be in. */
     enum RoomState { LOCKED, UNLOCKED, UNKNOWN }
@@ -41,6 +41,8 @@ public interface GameState extends Serializable {
     Maze getMaze();
     /** Retrieves all the questions for each room of the current game state. */
     Map<Room, Question> getQuestions();
+    /** Register an attempt to answer a question. */
+    void attemptQuestion(Room room, String answer);
 
     /**
      * Retrieves the question of a given room.
@@ -77,7 +79,7 @@ public interface GameState extends Serializable {
      * @param room The room meant to be checked.
      * @return The state of the given room.
      */
-    RoomState checkRoomState(Room room);
+    RoomState getRoomState(Room room);
 
     /**
      * Set the state of a given room.

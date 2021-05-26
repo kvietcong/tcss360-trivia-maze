@@ -13,17 +13,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public class GamePanel extends JPanel implements PropertyChangeListener {
     private static final GameState STATE = GameStateSimple.getInstance();
-
-    private GridBagConstraints gbc;
+    private static final Set<String> SIGNALS = new HashSet<>(Arrays.asList(MOVE.toString(), ROOM_CHANGE.toString()));
 
     private final Set<JButton> unlockedRooms;
     private final Set<JButton> unknownRooms;
     private final Set<JLabel> lockedRooms;
+
+    private GridBagConstraints gbc;
+    private JPanel questionPanel;
 
     /**
      * Initialize the maze panel and menu bar.
@@ -34,6 +37,8 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
         // TODO: Remove this hard coded load state when done testing
 
         STATE.addPropertyChangeListener(this);
+        questionPanel = new QuestionChoicePanel();
+        add(questionPanel);
 
         lockedRooms = new HashSet<>();
         unknownRooms = new HashSet<>();
@@ -82,7 +87,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 
         Set<Room> neighbors = STATE.getCurrentNeighbors();
         neighbors.forEach(neighbor -> {
-            RoomState state = STATE.checkRoomState(neighbor);
+            RoomState state = STATE.getRoomState(neighbor);
             String label = neighbor.toString();
             if (state == LOCKED) {
                 lockedRooms.add(new JLabel(label));
@@ -130,11 +135,18 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 
         switch (state) {
             case UNLOCKED -> {
-                newButton.addActionListener(action -> STATE.moveToRoom(room));
+                newButton.addActionListener(action -> {
+                    STATE.moveToRoom(room);
+                });
                 unlockedRooms.add(newButton);
             }
             case UNKNOWN -> {
-                newButton.addActionListener(action -> STATE.moveToRoom(room));
+                newButton.addActionListener(action -> {
+                    remove(questionPanel);
+                    questionPanel = new QuestionChoicePanel(room, question, STATE);
+                    add(questionPanel);
+                    refresh();
+                });
                 unknownRooms.add(newButton);
             }
             default -> throw new IllegalArgumentException();
@@ -149,7 +161,8 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(PropertyChangeEvent event) {
-        if (event.getPropertyName().equals(MOVE.toString())) {
+        if (SIGNALS.contains(event.getPropertyName())) {
+            remove(questionPanel);
             refresh();
         }
     }

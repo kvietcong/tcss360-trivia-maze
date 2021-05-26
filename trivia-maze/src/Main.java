@@ -7,7 +7,7 @@ import java.awt.*;
 public class Main {
 
     public static void main(String[] args) {
-        EventQueue.invokeLater(Main::new);
+        // EventQueue.invokeLater(Main::new);
         EventQueue.invokeLater(GUIController::new);
     }
 

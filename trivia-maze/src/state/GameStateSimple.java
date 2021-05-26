@@ -44,12 +44,13 @@ public class GameStateSimple implements GameState {
     public Map<Room, Question> getQuestions() { return questions; }
     public Set<Room> getNeighbors(Room room) { return maze.getNeighbors(room); }
     public Set<Room> getCurrentNeighbors() { return getNeighbors(currentRoom); }
-    public RoomState checkRoomState(Room room) { return roomStates.getOrDefault(room, null); }
+    public RoomState getRoomState(Room room) { return roomStates.getOrDefault(room, null); }
     public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
     public int getDistanceToEnd(Room room) { return distancesToEndRoom.getOrDefault(room, -1); }
 
     public void setRoomState(Room room, RoomState state) {
         roomStates.put(room, state);
+        propertyChangeSupport.firePropertyChange(ROOM_CHANGE.toString(), 0, 1);
         calculatePaths();
     }
 
@@ -109,6 +110,20 @@ public class GameStateSimple implements GameState {
         propertyChangeSupport.firePropertyChange(MOVE.toString(), oldRoom, newRoom);
     }
 
+    public void attemptQuestion(Room room, String answer) {
+        Question question = getRoomQuestion(room);
+        RoomState oldState = getRoomState(room);
+        RoomState newState;
+        if (question.isCorrectAnswer(answer)) {
+            setRoomState(room, RoomState.UNLOCKED);
+            newState = RoomState.UNLOCKED;
+        } else {
+            setRoomState(room, RoomState.LOCKED);
+            newState = RoomState.LOCKED;
+        }
+        propertyChangeSupport.firePropertyChange(ROOM_CHANGE.toString(), oldState, newState);
+    }
+
 
     private void calculatePaths() {
         distancesToEndRoom = new HashMap<>();
@@ -135,7 +150,7 @@ public class GameStateSimple implements GameState {
             Set<Room> neighbors = reversedMaze.get(currentRoom);
             for (Room neighbor : neighbors) {
                 if (!searched.contains(neighbor)
-                        && checkRoomState(neighbor) != RoomState.LOCKED) {
+                        && getRoomState(neighbor) != RoomState.LOCKED) {
                     toSearch.add(neighbor);
                     searched.add(neighbor);
                     distancesToEndRoom.put(neighbor, distancesToEndRoom.get(currentRoom) + 1);

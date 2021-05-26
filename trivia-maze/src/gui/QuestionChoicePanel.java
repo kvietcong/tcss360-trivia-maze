@@ -9,14 +9,10 @@ import java.awt.*;
 import java.util.Arrays;
 
 public class QuestionChoicePanel extends JPanel {
-    public QuestionChoicePanel() {
-
-    }
-
     // Constructor for a question panel
     public QuestionChoicePanel(Room room, Question question, GameState gameState) {
         setLayout(new GridLayout(0, 1));
-        add(new JLabel(room.toString()));
+        add(new JLabel("Question for " + room.toString()));
         add(new JLabel(question.getQuestion()));
         if (question.getType() != Question.QuestionType.SA) {
             Arrays.stream(question.getChoices()).forEach(choice -> {

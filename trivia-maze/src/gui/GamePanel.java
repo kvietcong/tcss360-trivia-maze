@@ -21,12 +21,13 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
     private static final GameState STATE = GameStateSimple.getInstance();
     private static final Set<String> SIGNALS = new HashSet<>(Arrays.asList(MOVE.toString(), ROOM_CHANGE.toString()));
 
-    private final Set<JButton> unlockedRooms;
-    private final Set<JButton> unknownRooms;
+    private final Set<JRoomButton> unlockedRooms;
+    private final Set<JRoomButton> unknownRooms;
     private final Set<JLabel> lockedRooms;
+    private final JLabel currentRoom;
 
     private GridBagConstraints gbc;
-    private JPanel questionPanel;
+    private JPanel questionPanel = new JPanel();
 
     /**
      * Initialize the maze panel and menu bar.
@@ -37,8 +38,6 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
         // TODO: Remove this hard coded load state when done testing
 
         STATE.addPropertyChangeListener(this);
-        questionPanel = new QuestionChoicePanel();
-        add(questionPanel);
 
         lockedRooms = new HashSet<>();
         unknownRooms = new HashSet<>();
@@ -48,19 +47,19 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
         gbc = new GridBagConstraints();
         resetConstraints();
 
-        gbc.gridwidth = 100;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        add(new JLabel("Neighboring Rooms"), gbc);
+        currentRoom = new JLabel();
+        currentRoom.setFont(new Font("Serif", Font.BOLD, 24));
+        add(currentRoom);
 
         resetConstraints();
         gbc.gridy++;
-        add(new JLabel("Unlocked Rooms:"), gbc);
+        add(new JLabel("Neighboring Unlocked Rooms:"), gbc);
 
         gbc.gridy++;
-        add(new JLabel("Unknown Rooms:"), gbc);
+        add(new JLabel("Neighboring Unknown Rooms:"), gbc);
 
         gbc.gridy++;
-        add(new JLabel("Locked Rooms:"), gbc);
+        add(new JLabel("Neighboring Locked Rooms:"), gbc);
 
         refresh();
     }
@@ -70,7 +69,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
         // Grid Bag Reference: https://docs.oracle.com/javase/tutorial/uiswing/layout/gridbag.html
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.fill = GridBagConstraints.NONE;
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.ipadx = 50;
@@ -84,6 +83,8 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
         unlockedRooms.clear();
         unknownRooms.clear();
         lockedRooms.clear();
+
+        currentRoom.setText("Neighboring Rooms to " + STATE.getCurrentRoom().toString());
 
         Set<Room> neighbors = STATE.getCurrentNeighbors();
         neighbors.forEach(neighbor -> {
@@ -99,14 +100,14 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
         resetConstraints();
         gbc.gridx = 1;
         gbc.gridy++;
-        unlockedRooms.forEach(element -> {
+        unlockedRooms.stream().sorted().forEach(element -> {
             add(element, gbc);
             gbc.gridx++;
         });
 
         gbc.gridx = 1;
         gbc.gridy++;
-        unknownRooms.forEach(element -> {
+        unknownRooms.stream().sorted().forEach(element -> {
             add(element, gbc);
             gbc.gridx++;
         });
@@ -115,7 +116,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
         gbc.ipadx = 0;
         gbc.fill = GridBagConstraints.NONE;
         gbc.gridy++;
-        lockedRooms.forEach(element -> {
+        lockedRooms.stream().sorted().forEach(element -> {
             add(element, gbc);
             gbc.gridx++;
         });
@@ -126,12 +127,12 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 
     public void createRoomButton(Room room, RoomState state, String label) {
         Question question = STATE.getRoomQuestion(room);
-        JButton newButton = new JButton(
+        JRoomButton newButton = new JRoomButton(
                 "<html>" + label
                 + "<br/>Topics: "
                 + String.join(", ", question.getTopics())
                 + "<br/>" + STATE.getDistanceToEnd(room) + " rooms from the end"
-                + "</html>");
+                + "</html>", room);
 
         switch (state) {
             case UNLOCKED -> {

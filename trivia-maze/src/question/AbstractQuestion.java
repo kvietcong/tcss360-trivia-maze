@@ -1,5 +1,8 @@
 package question;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 public abstract class AbstractQuestion implements Question {
     /** The type of the question. */
     private final QuestionType type;
@@ -25,6 +28,16 @@ public abstract class AbstractQuestion implements Question {
      */
     protected AbstractQuestion(QuestionType type, String[] topics,
                                String question, String[] choices, String answer) {
+        if (
+                type == null
+                || topics == null
+                || question == null
+                || choices == null
+                || answer == null
+        ) {
+            throw new IllegalArgumentException("You cannot have null Question parameters!");
+        }
+
         this.type = type;
         this.question = question;
         this.choices = choices;
@@ -43,5 +56,24 @@ public abstract class AbstractQuestion implements Question {
     @Override
     public String toString() {
         return question + "\nChoices: " + String.join(", ", choices) + "\nAnswer: " + answer;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        AbstractQuestion otherQuestion = (AbstractQuestion) other;
+        return type == otherQuestion.type && question.equals(otherQuestion.question)
+                && Arrays.equals(choices, otherQuestion.choices)
+                && answer.equals(otherQuestion.answer)
+                && Arrays.equals(topics, otherQuestion.topics);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(type, question, answer);
+        result = 31 * result + Arrays.hashCode(choices);
+        result = 31 * result + Arrays.hashCode(topics);
+        return result;
     }
 }

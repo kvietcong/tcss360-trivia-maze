@@ -9,9 +9,9 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-public class QuestionChoicePanel extends JPanel {
+public class TriviaPanel extends JPanel {
     // Constructor for a question panel
-    public QuestionChoicePanel(Room room, Question question, GameState gameState, Consumer<String> changeCard) {
+    public TriviaPanel(Room room, Question question, GameState gameState, Consumer<String> changeCard) {
         setLayout(new GridLayout(0, 1));
 
         JPanel container = new JPanel();

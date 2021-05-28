@@ -12,6 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static state.GameState.GameEvent;
 
@@ -22,21 +23,23 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
     private final Set<JRoomButton> unknownButtons = new HashSet<>();
     private final Set<JRoomButton> lockedButtons = new HashSet<>();
     private final JLabel mazeTitle = new JLabel();
+    private final Consumer<String> showCard;
 
     private final JPanel mazePanel = new JPanel();
     private final JPanel mazeNeighborPanel = new JPanel();
 
     private final JPanel triviaPanel = new JPanel();
-    private JPanel triviaQuestionPanel = new JPanel();
 
     /**
-     * Initialize the maze panel and menu bar.
-     * */
-    public GamePanel(){
+     * Initialize a new panel to handle game GUI
+     * @param mainFrame Reference to main frame
+     */
+    public GamePanel(Consumer<String> showCard) {
         // TODO: Remove this hard coded load state when done testing
         STATE.loadState("./test.maze");
         // TODO: Remove this hard coded load state when done testing
 
+        this.showCard = showCard;
         STATE.addPropertyChangeListener(this);
 
         JPanel centerTitle = new JPanel();
@@ -73,7 +76,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
         mazeNeighborPanel.add(containerizeButtons("Neighboring Locked Rooms", lockedButtons));
 
         mazeNeighborPanel.add(Box.createVerticalStrut(50));
-        getMainLayout().show(this, "CURRENT_INFO");
+        show("CURRENT_INFO");
         revalidate();
         repaint();
     }
@@ -112,10 +115,9 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
             }
             case UNKNOWN -> {
                 newButton.addActionListener(action -> {
-                    triviaPanel.remove(triviaQuestionPanel);
-                    triviaQuestionPanel = new QuestionChoicePanel(room, question, STATE, this::show);
-                    triviaPanel.add(triviaQuestionPanel);
-                    getMainLayout().show(this, "ANSWER_QUESTION");
+                    triviaPanel.removeAll();
+                    triviaPanel.add(new TriviaPanel(room, question, STATE, this::show));
+                    show("ANSWER_QUESTION");
                     revalidate();
                     repaint();
                 });
@@ -129,11 +131,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
     }
 
     public void show(String card) {
-        getMainLayout().show(this, card);
-    }
-
-    private CardLayout getMainLayout() {
-        return (CardLayout) this.getLayout();
+        ((CardLayout) this.getLayout()).show(this, card);
     }
 
     /**
@@ -144,9 +142,16 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
      */
     @Override
     public void propertyChange(PropertyChangeEvent event) {
-        switch (GameEvent.valueOf(event.getPropertyName())) {
+        GameEvent gameEvent = GameEvent.valueOf(event.getPropertyName());
+        switch (gameEvent) {
             case MOVE, ROOM_CHANGE -> refresh();
-            case END -> System.out.println("You won!!!");
+            case WIN, LOSE -> {
+                removeAll();
+                add(new EndPanel(gameEvent, showCard), "END");
+                show("END");
+                revalidate();
+                refresh();
+            }
             default -> throw new IllegalStateException("Unexpected value: " + event.getPropertyName());
         }
     }

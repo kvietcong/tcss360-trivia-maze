@@ -109,7 +109,7 @@ public class GameStateSimple implements GameState {
         currentRoom = newRoom;
         propertyChangeSupport.firePropertyChange(MOVE.toString(), oldRoom, newRoom);
         if (currentRoom == endRoom) {
-            propertyChangeSupport.firePropertyChange(END.toString(), oldRoom, newRoom);
+            propertyChangeSupport.firePropertyChange(WIN.toString(), oldRoom, newRoom);
         }
     }
 
@@ -161,6 +161,10 @@ public class GameStateSimple implements GameState {
                     if (neighbor.equals(endRoom)) { break; }
                 }
             }
+        }
+
+        if (getDistanceToEnd(getCurrentRoom()) == -1) {
+            propertyChangeSupport.firePropertyChange(LOSE.toString(), null, this);
         }
 
         /* OH GOODNESS THE TIME COMPLEXITY!!!!!!!!!!!!

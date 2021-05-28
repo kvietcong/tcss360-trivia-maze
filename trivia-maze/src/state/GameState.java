@@ -15,7 +15,7 @@ import java.util.Set;
 
 public interface GameState extends Serializable {
     /** Events that listeners can hook onto. */
-    enum GameEvent { MOVE, ROOM_CHANGE, END, SAVE, LOAD }
+    enum GameEvent { MOVE, ROOM_CHANGE, WIN, LOSE, SAVE, LOAD }
 
     /** What states a room can be in. */
     enum RoomState { LOCKED, UNLOCKED, UNKNOWN }

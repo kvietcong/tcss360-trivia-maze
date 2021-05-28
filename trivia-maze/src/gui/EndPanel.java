@@ -4,10 +4,9 @@ import state.GameState;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.function.Consumer;
 
 public class EndPanel extends JPanel {
-    public EndPanel(GameState.GameEvent status, Consumer<String> showCard) {
+    public EndPanel(GameState.GameEvent status, Runnable showMainMenu) {
         setLayout(new BorderLayout());
 
         JPanel center = new JPanel();
@@ -19,7 +18,7 @@ public class EndPanel extends JPanel {
         center.add(title, new GridBagConstraints());
 
         JButton mainMenu = new JButton("Return to Main Menu");
-        mainMenu.addActionListener(action -> showCard.accept("MAIN"));
+        mainMenu.addActionListener(action -> showMainMenu.run());
         center.add(mainMenu);
 
         revalidate();

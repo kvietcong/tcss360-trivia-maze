@@ -4,22 +4,19 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GUIController {
-    private JPanel mainPanel;
+    private final JPanel mainPanel;
 
     public GUIController() {
-        createGUI();
-    }
-
-    private void createGUI() {
         JFrame frame = new JFrame("Trivia Maze");
         frame.setSize(1280, 720);
         mainPanel = new JPanel();
-        mainPanel.setLayout(new CardLayout());
+        CardLayout cards = new CardLayout();
+        mainPanel.setLayout(cards);
 
-        mainPanel.add(new MainMenuPanel(frame::dispose, this::showCard), "MAIN");
-        mainPanel.add(new GamePanel(this::showCard), "GAME");
+        mainPanel.add(new MainMenuPanel(frame::dispose, () -> cards.show(mainPanel, "GAME")), "MAIN");
+        mainPanel.add(new GamePanel(() -> cards.show(mainPanel, "MAIN")), "GAME");
 
-        showCard("MAIN");
+        cards.show(mainPanel, "MAIN");
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
@@ -27,6 +24,4 @@ public class GUIController {
         frame.revalidate();
         frame.repaint();
     }
-
-    public void showCard(String card) { ((CardLayout) mainPanel.getLayout()).show(mainPanel, card); }
 }

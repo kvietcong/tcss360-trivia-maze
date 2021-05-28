@@ -2,17 +2,13 @@ package gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.function.Consumer;
 
 public class MainMenuPanel extends JPanel {
-    private final Consumer<String> showCard;
-
     /**
      * Initialize the panel and frame.
      * */
-    public MainMenuPanel(Runnable exit, Consumer<String> showCard) {
+    public MainMenuPanel(Runnable exit, Runnable showGame) {
         setLayout(null);
-        this.showCard = showCard;
         setBackground(Color.black);
         setVisible(true);
         //new game button
@@ -31,7 +27,7 @@ public class MainMenuPanel extends JPanel {
         add(exitButton);
 
         //action listener for the buttons
-        newGame.addActionListener(action -> showCard.accept("GAME"));
+        newGame.addActionListener(action -> showGame.run());
         options.addActionListener(action -> {});
         exitButton.addActionListener(action -> exit.run());
     }

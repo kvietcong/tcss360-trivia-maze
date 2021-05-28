@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
     private final Set<JRoomButton> unknownButtons = new HashSet<>();
     private final Set<JRoomButton> lockedButtons = new HashSet<>();
     private final JLabel mazeTitle = new JLabel();
-    private final Consumer<String> showCard;
+    private final Runnable showMainMenu;
 
     private final JPanel mazePanel = new JPanel();
     private final JPanel mazeNeighborPanel = new JPanel();
@@ -32,14 +32,14 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 
     /**
      * Initialize a new panel to handle game GUI
-     * @param mainFrame Reference to main frame
+     * @param showMainMenu Go back to main menu
      */
-    public GamePanel(Consumer<String> showCard) {
+    public GamePanel(Runnable showMainMenu) {
         // TODO: Remove this hard coded load state when done testing
         STATE.loadState("./test.maze");
         // TODO: Remove this hard coded load state when done testing
 
-        this.showCard = showCard;
+        this.showMainMenu = showMainMenu;
         STATE.addPropertyChangeListener(this);
 
         JPanel centerTitle = new JPanel();
@@ -147,7 +147,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
             case MOVE, ROOM_CHANGE -> refresh();
             case WIN, LOSE -> {
                 removeAll();
-                add(new EndPanel(gameEvent, showCard), "END");
+                add(new EndPanel(gameEvent, showMainMenu), "END");
                 show("END");
                 revalidate();
                 refresh();

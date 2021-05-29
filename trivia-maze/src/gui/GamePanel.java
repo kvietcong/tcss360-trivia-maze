@@ -36,7 +36,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
      */
     public GamePanel(Runnable showMainMenu) {
         // TODO: Remove this hard coded load state when done testing
-        STATE.loadState("./test.maze");
+        STATE.loadState("trivia-maze/test.maze");
         // TODO: Remove this hard coded load state when done testing
 
         this.showMainMenu = showMainMenu;

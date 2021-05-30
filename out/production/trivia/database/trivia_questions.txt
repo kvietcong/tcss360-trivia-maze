@@ -1,9 +1,0 @@
-Are you good?
-True|False
-True
-Are you sure?
-Yes|No|Maybe|I don''t know
-Yes
-What is your favorite color?
-Blue|No, gre-|AHHH
-AHHH

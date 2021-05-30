@@ -18,7 +18,7 @@ public class TriviaPanel extends JPanel {
         container.setLayout(new BorderLayout());
 
         JLabel title = new JLabel("Question for " + room.toString());
-        title.setFont(new Font("Serif", Font.BOLD, 48));
+        title.setFont(new Font("Arial", Font.BOLD, 48));
         container.add(title, BorderLayout.NORTH);
 
         JPanel center = new JPanel();
@@ -28,7 +28,7 @@ public class TriviaPanel extends JPanel {
         gbc.ipady = 25;
 
         JLabel questionTitle = new JLabel(question.getQuestion());
-        questionTitle.setFont(new Font("Serif", Font.BOLD, 36));
+        questionTitle.setFont(new Font("Arial", Font.BOLD, 36));
         center.add(questionTitle, gbc);
 
         JPanel answersContainer = new JPanel();
@@ -51,6 +51,8 @@ public class TriviaPanel extends JPanel {
         JButton leaveButton = new JButton("Back out");
         leaveButton.addActionListener(action -> changeCard.accept("CURRENT_INFO"));
         leaveButton.setBackground(Color.RED);
+        leaveButton.setFont(new Font("Arial", Font.BOLD, 20));
+        leaveButton.setForeground(Color.WHITE);
         gbc.gridy++;
         center.add(leaveButton, gbc);
 

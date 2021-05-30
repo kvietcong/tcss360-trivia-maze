@@ -14,7 +14,7 @@ public class EndPanel extends JPanel {
         center.setLayout(new GridBagLayout());
 
         JLabel title = new JLabel(status == GameState.GameEvent.WIN ? "You Won!!!" : "You Lost :(");
-        title.setFont(new Font("Serif", Font.BOLD, 72));
+        title.setFont(new Font("Arial", Font.BOLD, 72));
         center.add(title, new GridBagConstraints());
 
         JButton mainMenu = new JButton("Return to Main Menu");

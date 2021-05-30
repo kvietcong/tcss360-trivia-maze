@@ -10,17 +10,16 @@
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
-    <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/src/database/sqlite-jdbc-3.34.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/sqlite-jdbc-3.34.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" scope="TEST">
       <library name="JUnit5.7.0">
         <CLASSES>
@@ -48,6 +47,25 @@
           <root url="jar://$MODULE_DIR$/lib/junit-jupiter-params-5.7.0.jar!/" />
           <root url="jar://$MODULE_DIR$/lib/junit-jupiter-engine-5.7.0.jar!/" />
           <root url="jar://$MODULE_DIR$/lib/junit-platform-engine-1.7.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/flatlaf-1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/flatlaf-intellij-themes-1.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

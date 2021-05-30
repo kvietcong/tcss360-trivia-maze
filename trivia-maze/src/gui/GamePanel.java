@@ -44,7 +44,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
 
         JPanel centerTitle = new JPanel();
         centerTitle.setLayout(new GridBagLayout());
-        mazeTitle.setFont(new Font("Serif", Font.BOLD, 48));
+        mazeTitle.setFont(new Font("Arial", Font.BOLD, 48));
         centerTitle.add(mazeTitle);
 
         mazeNeighborPanel.setLayout(new GridLayout(0, 1));

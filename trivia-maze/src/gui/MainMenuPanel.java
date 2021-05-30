@@ -9,7 +9,6 @@ public class MainMenuPanel extends JPanel {
      * */
     public MainMenuPanel(Runnable exit, Runnable showGame) {
         setLayout(null);
-        setBackground(Color.black);
         setVisible(true);
         //new game button
         JButton newGame = new JButton("New Game");

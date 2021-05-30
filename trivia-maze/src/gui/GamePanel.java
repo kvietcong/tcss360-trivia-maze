@@ -6,13 +6,16 @@ import state.GameState;
 import state.GameState.RoomState;
 import state.GameStateSimple;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import static state.GameState.GameEvent;
 
@@ -29,6 +32,8 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
     private final JPanel mazeNeighborPanel = new JPanel();
 
     private final JPanel triviaPanel = new JPanel();
+
+    private AudioInputStream correctAudio;
 
     /**
      * Initialize a new panel to handle game GUI

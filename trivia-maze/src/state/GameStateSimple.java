@@ -1,13 +1,17 @@
 package state;
 
+import maze.Maze;
+import maze.Room;
+import question.Question;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.*;
 import java.util.*;
-
-import maze.Maze;
-import maze.Room;
-import question.Question;
 
 import static state.GameState.GameEvent.*;
 
@@ -34,7 +38,27 @@ public class GameStateSimple implements GameState {
     private Map<Room, Integer> distancesToEndRoom;
 
     /** Initializes a new Game State Object with event firing support. */
-    private GameStateSimple() { propertyChangeSupport = new PropertyChangeSupport(this); }
+    private GameStateSimple() {
+        propertyChangeSupport = new PropertyChangeSupport(this);
+
+    }
+
+    /**
+     * Play a given sound file.
+     * @param file File to play.
+     */
+    private void playFile(String file) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(-25.0f);
+            clip.start();
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            System.out.println("Failed to load audio");
+        }
+    }
 
     public Maze getMaze() { return maze; }
     public Room getEndRoom() { return endRoom; }
@@ -109,6 +133,7 @@ public class GameStateSimple implements GameState {
         currentRoom = newRoom;
         propertyChangeSupport.firePropertyChange(MOVE.toString(), oldRoom, newRoom);
         if (currentRoom == endRoom) {
+            playFile("resources/come on and slam.wav");
             propertyChangeSupport.firePropertyChange(WIN.toString(), oldRoom, newRoom);
         }
     }
@@ -118,9 +143,11 @@ public class GameStateSimple implements GameState {
         RoomState oldState = getRoomState(room);
         RoomState newState;
         if (question.isCorrectAnswer(answer)) {
+            playFile("resources/correct.wav");
             setRoomState(room, RoomState.UNLOCKED);
             newState = RoomState.UNLOCKED;
         } else {
+            playFile("resources/incorrect.wav");
             if (room.equals(endRoom)) { return; } // Make it so you can't lock the final room
             setRoomState(room, RoomState.LOCKED);
             newState = RoomState.LOCKED;

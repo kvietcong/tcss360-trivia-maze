@@ -1,6 +1,8 @@
 package maze;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MazeArray extends AbstractMaze {
     /** The maze in graph form */

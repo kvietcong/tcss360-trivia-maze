@@ -12,7 +12,6 @@ public class MainMenuPanel extends JPanel {
     public MainMenuPanel(Runnable exit, Runnable showGame) {
         gbc = new GridBagConstraints();
         setLayout(new GridBagLayout());
-        setBackground(Color.black);
         setConstraints();
 
         //new game button

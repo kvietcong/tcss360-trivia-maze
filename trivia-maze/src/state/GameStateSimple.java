@@ -65,10 +65,6 @@ public class GameStateSimple implements GameState {
         // TODO: Remove this when initiateState is implemented
         loadState("./test.maze");
         // TODO: Remove this when initiateState is implemented
-
-        calculatePaths();
-        clearSound();
-        propertyChangeSupport.firePropertyChange(LOAD.name(), null, this);
     }
 
     public boolean saveState(String savePath) {
@@ -90,13 +86,14 @@ public class GameStateSimple implements GameState {
             try (ObjectInputStream objectIn = new ObjectInputStream(fileIn)) {
                 setState((GameStateSimple) objectIn.readObject());
                 calculatePaths();
+                clearSound();
+                propertyChangeSupport.firePropertyChange(LOAD.name(), null, this);
+                return true;
             }
         } catch (Exception exception) {
             exception.printStackTrace();
             return false;
         }
-        clearSound();
-        return true;
     }
 
     /**
@@ -139,7 +136,9 @@ public class GameStateSimple implements GameState {
         }
     }
 
-
+    /**
+     * Calculate every room's distance to the final room
+     */
     private void calculatePaths() {
         if (maze == null) { return; }
         distancesToEndRoom = new HashMap<>();
@@ -179,40 +178,6 @@ public class GameStateSimple implements GameState {
             playFile("resources/sad violin.wav");
             propertyChangeSupport.firePropertyChange(LOSE.name(), null, this);
         }
-
-        /* OH GOODNESS THE TIME COMPLEXITY!!!!!!!!!!!!
-         * So this code below here goes through every node in the graph and does BFS on EACH ONE
-         * to find the distance to the end. This means the time complexity is O(V^2 + VE) where
-         * V is the amount of vertices and E is the amount of Edges
-         * I will keep this as a remainder of my failure
-         * - KV Le
-         */
-        /*
-        maze.getRooms().stream().filter(room -> !room.equals(endRoom)).forEach(room -> {
-            Map<Room, Integer> distanceTo = new HashMap<>();
-            Queue<Room> toSearch = new LinkedList<>();
-            Set<Room> searched = new HashSet<>();
-
-            toSearch.add(room);
-            searched.add(room);
-            distanceTo.put(room, 0);
-
-            while (!toSearch.isEmpty()) {
-                Room currentRoom = toSearch.poll();
-                Set<Room> neighbors = getNeighbors(currentRoom);
-                for (Room neighbor : neighbors) {
-                    if (!searched.contains(neighbor)) {
-                        toSearch.add(neighbor);
-                        searched.add(neighbor);
-                        distanceTo.put(neighbor, distanceTo.get(currentRoom) + 1);
-                        if (neighbor.equals(endRoom)) { break; }
-                    }
-                }
-            }
-            distancesToEndRoom.put(room, distanceTo.getOrDefault(endRoom, -1));
-        });
-        distancesToEndRoom.put(endRoom, 0);
-        */
     }
 
     /**

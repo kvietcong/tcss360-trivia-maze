@@ -12,7 +12,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.function.Consumer;
 
 import static state.GameState.GameEvent;
 
@@ -36,7 +35,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
      */
     public GamePanel(Runnable showMainMenu) {
         // TODO: Remove this hard coded load state when done testing
-        STATE.loadState("trivia-maze/test.maze");
+        STATE.loadState("C:\\Users\\merit\\IdeaProjects\\TriviaMaze\\tcss360-trivia-maze\\trivia-maze\\test.maze");
         // TODO: Remove this hard coded load state when done testing
 
         this.showMainMenu = showMainMenu;

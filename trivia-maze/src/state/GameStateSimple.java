@@ -4,10 +4,7 @@ import maze.Maze;
 import maze.Room;
 import question.Question;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.*;
@@ -17,10 +14,13 @@ import static state.GameState.GameEvent.*;
 
 public class GameStateSimple implements GameState {
     /** Singleton instance of the game state */
-    transient private static final GameState STATE = new GameStateSimple();
+    final transient private static GameState STATE = new GameStateSimple();
 
     /** Object to handle the event firing and listening. */
-    transient private final PropertyChangeSupport propertyChangeSupport;
+    final transient private PropertyChangeSupport propertyChangeSupport;
+
+    /** Stores any clips played during the game */
+    final transient private Set<Clip> audioClips = new HashSet<>();
 
     /** The state's game maze */
     private Maze maze;
@@ -40,24 +40,6 @@ public class GameStateSimple implements GameState {
     /** Initializes a new Game State Object with event firing support. */
     private GameStateSimple() {
         propertyChangeSupport = new PropertyChangeSupport(this);
-
-    }
-
-    /**
-     * Play a given sound file.
-     * @param file File to play.
-     */
-    private void playFile(String file) {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file));
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(-25.0f);
-            clip.start();
-        } catch (Exception exception) {
-            exception.printStackTrace();
-            System.out.println("Failed to load audio");
-        }
     }
 
     public Maze getMaze() { return maze; }
@@ -72,14 +54,21 @@ public class GameStateSimple implements GameState {
     public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
     public int getDistanceToEnd(Room room) { return distancesToEndRoom.getOrDefault(room, -1); }
 
-    public void setRoomState(Room room, RoomState state) {
-        roomStates.put(room, state);
-        propertyChangeSupport.firePropertyChange(ROOM_CHANGE.toString(), 0, 1);
+    public void setRoomState(Room room, RoomState newState) {
+        RoomState oldState = getRoomState(room);
+        roomStates.put(room, newState);
+        propertyChangeSupport.firePropertyChange(ROOM_CHANGE.name(), oldState, newState);
         calculatePaths();
     }
 
     public void initiateState() {
+        // TODO: Remove this when initiateState is implemented
+        loadState("./test.maze");
+        // TODO: Remove this when initiateState is implemented
+
         calculatePaths();
+        clearSound();
+        propertyChangeSupport.firePropertyChange(LOAD.name(), null, this);
     }
 
     public boolean saveState(String savePath) {
@@ -87,7 +76,7 @@ public class GameStateSimple implements GameState {
             try (ObjectOutputStream objectOut = new ObjectOutputStream(fileOut)) {
                 objectOut.writeObject(this);
                 propertyChangeSupport.firePropertyChange(
-                        SAVE.toString(), null, this);
+                        SAVE.name(), null, this);
                 return true;
             }
         } catch (Exception exception) {
@@ -106,7 +95,7 @@ public class GameStateSimple implements GameState {
             exception.printStackTrace();
             return false;
         }
-
+        clearSound();
         return true;
     }
 
@@ -125,38 +114,34 @@ public class GameStateSimple implements GameState {
         roomStates = newState.roomStates;
         distancesToEndRoom = newState.distancesToEndRoom;
         propertyChangeSupport.firePropertyChange(
-                LOAD.toString(), null, this);
+                LOAD.name(), null, this);
     }
 
     public void moveToRoom(Room newRoom) {
         Room oldRoom = currentRoom;
         currentRoom = newRoom;
-        propertyChangeSupport.firePropertyChange(MOVE.toString(), oldRoom, newRoom);
+        propertyChangeSupport.firePropertyChange(MOVE.name(), oldRoom, newRoom);
         if (currentRoom == endRoom) {
             playFile("resources/come on and slam.wav");
-            propertyChangeSupport.firePropertyChange(WIN.toString(), oldRoom, newRoom);
+            propertyChangeSupport.firePropertyChange(WIN.name(), oldRoom, newRoom);
         }
     }
 
     public void attemptQuestion(Room room, String answer) {
         Question question = getRoomQuestion(room);
-        RoomState oldState = getRoomState(room);
-        RoomState newState;
         if (question.isCorrectAnswer(answer)) {
             playFile("resources/correct.wav");
             setRoomState(room, RoomState.UNLOCKED);
-            newState = RoomState.UNLOCKED;
         } else {
             playFile("resources/incorrect.wav");
             if (room.equals(endRoom)) { return; } // Make it so you can't lock the final room
             setRoomState(room, RoomState.LOCKED);
-            newState = RoomState.LOCKED;
         }
-        propertyChangeSupport.firePropertyChange(ROOM_CHANGE.toString(), oldState, newState);
     }
 
 
     private void calculatePaths() {
+        if (maze == null) { return; }
         distancesToEndRoom = new HashMap<>();
 
         Map<Room, Set<Room>> reversedMaze = new HashMap<>();
@@ -191,7 +176,8 @@ public class GameStateSimple implements GameState {
         }
 
         if (getDistanceToEnd(getCurrentRoom()) == -1) {
-            propertyChangeSupport.firePropertyChange(LOSE.toString(), null, this);
+            playFile("resources/sad violin.wav");
+            propertyChangeSupport.firePropertyChange(LOSE.name(), null, this);
         }
 
         /* OH GOODNESS THE TIME COMPLEXITY!!!!!!!!!!!!
@@ -227,6 +213,32 @@ public class GameStateSimple implements GameState {
         });
         distancesToEndRoom.put(endRoom, 0);
         */
+    }
+
+    /**
+     * Play a given sound file.
+     * @param file File to play.
+     */
+    private void playFile(String file) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file));
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(-20.0f);
+            clip.start();
+            audioClips.add(clip);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            System.out.println("Failed to load audio");
+        }
+    }
+
+    /**
+     * Reset all the sound clips.
+     */
+    private void clearSound() {
+        audioClips.forEach(DataLine::stop);
+        audioClips.clear();
     }
 
     public void addPropertyChangeListener(final PropertyChangeListener listener) {

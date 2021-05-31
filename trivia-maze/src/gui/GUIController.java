@@ -2,12 +2,16 @@ package gui;
 
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.intellijthemes.FlatNordIJTheme;
+import state.GameState;
+import state.GameStateSimple;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class GUIController {
-    private final JPanel mainPanel;
+    final public static GameState STATE = GameStateSimple.getInstance();
+    final private JPanel framePanel;
+    final CardLayout cards = new CardLayout();
 
     public GUIController() {
         try {
@@ -19,18 +23,30 @@ public class GUIController {
 
         JFrame frame = new JFrame("Trivia Maze");
         frame.setSize(1280, 720);
-        mainPanel = new JPanel();
-        CardLayout cards = new CardLayout();
-        mainPanel.setLayout(cards);
+        framePanel = new JPanel();
+        framePanel.setLayout(cards);
 
-        mainPanel.add(new MainMenuPanel(frame::dispose, () -> cards.show(mainPanel, "GAME")), "MAIN");
-        mainPanel.add(new GamePanel(() -> cards.show(mainPanel, "MAIN")), "GAME");
+        framePanel.add(new GamePanel(() -> {
+            cards.show(framePanel, "MAIN");
+            STATE.initiateState();                  // Basically used to clear sounds
+        }), "GAME");
 
-        cards.show(mainPanel, "MAIN");
+        framePanel.add(new MainMenuPanel(frame::dispose,
+                    () -> {
+                        STATE.initiateState();
+                        cards.show(framePanel, "GAME");
+                    },
+                    loadPath -> {
+                        STATE.loadState(loadPath);
+                        cards.show(framePanel, "GAME");
+                    }
+                    ), "MAIN");
+
+        cards.show(framePanel, "MAIN");
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        frame.add(mainPanel);
+        frame.add(framePanel);
         frame.revalidate();
         frame.repaint();
     }

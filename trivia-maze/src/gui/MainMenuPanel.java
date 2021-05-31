@@ -1,18 +1,19 @@
 package gui;
 
 import javax.swing.*;
+import java.util.function.Consumer;
 
 public class MainMenuPanel extends JPanel {
     /**
      * Initialize the panel and frame.
      * */
-    public MainMenuPanel(Runnable exit, Runnable showGame) {
+    public MainMenuPanel(Runnable exit, Runnable newGame, Consumer<String> loadGame) {
         setLayout(null);
         setVisible(true);
         //new game button
-        JButton newGame = new JButton("New Game");
-        newGame.setBounds(150,100,220,80);
-        add(newGame);
+        JButton newGameButton = new JButton("New Game");
+        newGameButton.setBounds(150,100,220,80);
+        add(newGameButton);
 
         //options button
         JButton options = new JButton("Options");
@@ -25,7 +26,7 @@ public class MainMenuPanel extends JPanel {
         add(exitButton);
 
         //action listener for the buttons
-        newGame.addActionListener(action -> showGame.run());
+        newGameButton.addActionListener(action -> newGame.run());
         options.addActionListener(action -> {});
         exitButton.addActionListener(action -> exit.run());
     }

@@ -7,11 +7,10 @@ import state.GameState;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Arrays;
-import java.util.function.Consumer;
 
 public class TriviaPanel extends JPanel {
     // Constructor for a question panel
-    public TriviaPanel(Room room, Question question, GameState gameState, Consumer<String> changeCard) {
+    public TriviaPanel(Room room, Question question, GameState gameState, Runnable showCurrentInfo) {
         setLayout(new GridLayout(0, 1));
 
         JPanel container = new JPanel();
@@ -49,7 +48,7 @@ public class TriviaPanel extends JPanel {
         }
 
         JButton leaveButton = new JButton("Back out");
-        leaveButton.addActionListener(action -> changeCard.accept("CURRENT_INFO"));
+        leaveButton.addActionListener(action -> showCurrentInfo.run());
         leaveButton.setBackground(Color.RED);
         leaveButton.setFont(new Font("Arial", Font.BOLD, 20));
         leaveButton.setForeground(Color.WHITE);

@@ -6,14 +6,10 @@ import state.GameState;
 import state.GameState.RoomState;
 import state.GameStateSimple;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -32,8 +28,6 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
     private final JPanel mazeNeighborPanel = new JPanel();
 
     private final JPanel triviaPanel = new JPanel();
-
-    private AudioInputStream correctAudio;
 
     /**
      * Initialize a new panel to handle game GUI
@@ -62,10 +56,10 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
         add(mazePanel, "CURRENT_INFO");
         add(triviaPanel, "ANSWER_QUESTION");
 
-        refresh();
+        refreshCurrentInfo();
     }
 
-    public void refresh() {
+    public void refreshCurrentInfo() {
         unlockedButtons.clear();
         unknownButtons.clear();
         lockedButtons.clear();
@@ -121,7 +115,7 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
             case UNKNOWN -> {
                 newButton.addActionListener(action -> {
                     triviaPanel.removeAll();
-                    triviaPanel.add(new TriviaPanel(room, question, STATE, this::show));
+                    triviaPanel.add(new TriviaPanel(room, question, STATE, () -> show("CURRENT_INFO")));
                     show("ANSWER_QUESTION");
                     revalidate();
                     repaint();
@@ -135,8 +129,12 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
         }
     }
 
+    private CardLayout getCardLayout() {
+        return (CardLayout) getLayout();
+    }
+
     public void show(String card) {
-        ((CardLayout) this.getLayout()).show(this, card);
+        getCardLayout().show(this, card);
     }
 
     /**
@@ -149,13 +147,23 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent event) {
         GameEvent gameEvent = GameEvent.valueOf(event.getPropertyName());
         switch (gameEvent) {
-            case MOVE, ROOM_CHANGE -> refresh();
+            case MOVE, LOAD, SAVE -> refreshCurrentInfo();
+            case ROOM_CHANGE -> {
+                RoomState newState = (RoomState) event.getNewValue();
+                if (newState == RoomState.UNLOCKED) {
+                    JOptionPane.showMessageDialog(this, "You are Correct!",
+                            "Correct", JOptionPane.PLAIN_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(this, "You are Incorrect :(",
+                            "Incorrect", JOptionPane.ERROR_MESSAGE);
+                }
+                refreshCurrentInfo();
+            }
             case WIN, LOSE -> {
-                removeAll();
                 add(new EndPanel(gameEvent, showMainMenu), "END");
                 show("END");
                 revalidate();
-                refresh();
+                repaint();
             }
             default -> throw new IllegalStateException("Unexpected value: " + event.getPropertyName());
         }

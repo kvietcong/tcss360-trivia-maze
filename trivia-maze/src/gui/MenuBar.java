@@ -51,7 +51,7 @@ public class MenuBar extends JMenuBar {
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         response = fileChooser.showSaveDialog(null);
         if (response == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
+            //File fileToSave = fileChooser.getSelectedFile();
            // String fileName = fileToSave;
 
             //System.out.println(fileName);

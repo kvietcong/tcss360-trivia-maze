@@ -10,8 +10,6 @@ import java.awt.*;
 
 public class GUIController {
     final public static GameState STATE = GameStateSimple.getInstance();
-    final private JPanel framePanel;
-    final CardLayout cards = new CardLayout();
 
     public GUIController() {
         try {
@@ -20,6 +18,8 @@ public class GUIController {
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+        final JPanel framePanel;
+        final CardLayout cards = new CardLayout();
 
         JFrame frame = new JFrame("Trivia Maze");
         frame.setSize(1280, 720);
@@ -45,6 +45,7 @@ public class GUIController {
         cards.show(framePanel, "MAIN");
 
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setJMenuBar(new MenuBar());
         frame.setVisible(true);
         frame.add(framePanel);
         frame.revalidate();

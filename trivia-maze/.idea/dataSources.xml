@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:sqlite:C:\Users\braly\courses\tcss360\trivia_maze\tcss360-trivia-maze\trivia-maze\src\database\trivia.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="trivia [2]" uuid="a34667bc-00e0-491a-8878-2282e8d16242">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\braly\courses\tcss360\trivia_maze\tcss360-trivia-maze\trivia-maze\trivia.db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

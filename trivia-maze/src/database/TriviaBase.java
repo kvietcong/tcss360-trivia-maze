@@ -28,7 +28,6 @@ public class TriviaBase {
         this.questionsInfo = tdbc.getData().get("questions");
         this.questions = readQuestions(this.questionsInfo);
         this.currentQuestions = readQuestions(this.questionsInfo);
-        tdbc.close();
     }
 
     /**

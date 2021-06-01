@@ -85,7 +85,7 @@ public class MenuBar extends JMenuBar {
 
         if (selectedOption == JFileChooser.APPROVE_OPTION) {
             java.io.File file = fileChooser.getSelectedFile();
-            state.saveState(file.getPath());
+            state.saveState(file.getPath() + ".maze");
         }
     }
     /**

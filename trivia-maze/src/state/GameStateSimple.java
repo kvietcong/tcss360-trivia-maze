@@ -82,6 +82,7 @@ public class GameStateSimple implements GameState {
         calculatePaths();
 
         propertyChangeSupport.firePropertyChange(LOAD.name(), null, this);
+        clearSound();
     }
 
     public boolean saveState(String savePath) {

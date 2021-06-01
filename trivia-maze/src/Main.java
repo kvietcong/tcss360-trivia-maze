@@ -7,14 +7,9 @@ public class Main {
     public static void main(String[] args) {
         EventQueue.invokeLater(GUIController::new);
 
-        Runtime.getRuntime().addShutdownHook(new Thread()
-        {
-            @Override
-            public void run()
-            {
-                System.out.println("closing database");
-                TriviaDatabaseConnection.getConnection().close();
-            }
-        });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("closing database");
+            TriviaDatabaseConnection.getConnection().close();
+        }));
     }
 }

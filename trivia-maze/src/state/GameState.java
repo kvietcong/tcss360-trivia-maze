@@ -52,7 +52,6 @@ public interface GameState extends Serializable {
 
     /**
      * Retrieves the question of a given room.
-     * TODO: Rename to getQuestionRoom.
      * @param room The room to be queried.
      * @return The Question of the room or null if there is none.
      */
@@ -60,6 +59,12 @@ public interface GameState extends Serializable {
 
     /** Retrieves the current room of the game state. */
     Room getCurrentRoom();
+
+    /** Retrieves the start room of the game state. */
+    Room getStartRoom();
+
+    /** Retrieves the end room of the game state. */
+    Room getEndRoom();
 
     /**
      * Move the current game state's room to the given new room.

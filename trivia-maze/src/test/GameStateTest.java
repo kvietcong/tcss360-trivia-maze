@@ -9,10 +9,16 @@ import question.QuestionTF;
 import state.GameState;
 import state.GameStateSimple;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Class to test Game State interface.
+ */
 class GameStateTest {
     /** Testing State. */
     GameState testState;
@@ -44,6 +50,16 @@ class GameStateTest {
 
     @org.junit.jupiter.api.Test
     void initiateState() {
+        testState.initiateState();
+        assertAll("Test game initialization",
+                () -> assertNotNull(testState.getCurrentRoom(), "Game state not initialized"),
+                () -> assertNotNull(testState.getQuestions(), "Game state not initialized"),
+                () -> assertNotNull(testState.getQuestions(), "Game state not initialized"),
+                () -> assertNotNull(testState.getMaze(), "Game state not initialized"),
+                () -> assertNotNull(testState.getStartRoom(), "Game state not initialized"),
+                () -> assertNotNull(testState.getEndRoom(), "Game state not initialized"),
+                () -> assertNotNull(testState.getCurrentNeighbors(), "Game state not initialized")
+        );
     }
 
     @org.junit.jupiter.api.Test
@@ -63,6 +79,25 @@ class GameStateTest {
 
     @org.junit.jupiter.api.Test
     void saveState() {
+        class Dummy implements PropertyChangeListener {
+            public boolean isSaved = false;
+            public Dummy() {
+                testState.addPropertyChangeListener(this);
+                testState.saveState("./testSaving.maze");
+            }
+
+            @Override
+            public void propertyChange(PropertyChangeEvent event) {
+                isSaved = event.getPropertyName().equals(GameState.GameEvent.SAVE.name());
+            }
+        }
+
+        Dummy dummy = new Dummy();
+        assertAll("Test Saving",
+                () -> assertTrue(dummy.isSaved, "Failed to save"),
+                () -> assertTrue((new File("./testSaving.maze")).exists(), "Failed to find save"),
+                () -> assertTrue((new File("./testSaving.maze")).delete(), "Failed to delete save")
+        );
     }
 
     @org.junit.jupiter.api.Test
@@ -161,21 +196,68 @@ class GameStateTest {
 
     @org.junit.jupiter.api.Test
     void getDistanceToEnd() {
+        testState.loadState("./test.maze");
+        assertAll("Test how distances are calculated",
+                () -> assertEquals(testState.getDistanceToEnd(testState.getStartRoom()),
+                        5, "Wrong Distance"),
+                () -> assertEquals(testState.getDistanceToEnd(testState.getEndRoom()),
+                        0, "Wrong Distance"),
+                () -> assertEquals(testState.getDistanceToEnd(new RoomSimple(1)),
+                        4, "Wrong Distance"),
+                () -> assertEquals(testState.getDistanceToEnd(new RoomSimple(2)),
+                        4, "Wrong Distance"),
+                () -> assertEquals(testState.getDistanceToEnd(new RoomSimple(3)),
+                        3, "Wrong Distance"),
+                () -> assertEquals(testState.getDistanceToEnd(new RoomSimple(4)),
+                        3, "Wrong Distance"),
+                () -> assertEquals(testState.getDistanceToEnd(new RoomSimple(5)),
+                        3, "Wrong Distance"),
+                () -> assertEquals(testState.getDistanceToEnd(new RoomSimple(6)),
+                        2, "Wrong Distance"),
+                () -> assertEquals(testState.getDistanceToEnd(new RoomSimple(7)),
+                        2, "Wrong Distance"),
+                () -> assertEquals(testState.getDistanceToEnd(new RoomSimple(8)),
+                        1, "Wrong Distance")
+        );
     }
 
     @org.junit.jupiter.api.Test
     void checkRoomState() {
+        assertAll("Test how room state is returned",
+                () -> assertEquals(testState.getRoomState(new RoomSimple(0)),
+                        GameState.RoomState.UNLOCKED, "Wrong room state returned"),
+                () -> assertEquals(testState.getRoomState(new RoomSimple(1)),
+                        GameState.RoomState.UNKNOWN, "Wrong room state returned")
+        );
+        testState.setRoomState(new RoomSimple(1), GameState.RoomState.LOCKED);
+        assertAll("Test how room state is returned",
+                () -> assertEquals(testState.getRoomState(new RoomSimple(0)),
+                        GameState.RoomState.UNLOCKED, "Wrong room state returned"),
+                () -> assertEquals(testState.getRoomState(new RoomSimple(1)),
+                        GameState.RoomState.LOCKED, "Wrong room state returned")
+        );
+
+        testState.loadState("./test.maze");
+        assertAll("Test how room state is returned",
+                () -> assertEquals(testState.getRoomState(new RoomSimple(0)),
+                        GameState.RoomState.UNLOCKED, "Wrong room state returned")
+        );
     }
 
     @org.junit.jupiter.api.Test
     void setRoomState() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void addPropertyChangeListener() {
-    }
-
-    @org.junit.jupiter.api.Test
-    void removePropertyChangeListener() {
+        assertAll("Test how room state is set",
+                () -> assertEquals(testState.getRoomState(new RoomSimple(0)),
+                        GameState.RoomState.UNLOCKED, "Wrong room state returned"),
+                () -> assertEquals(testState.getRoomState(new RoomSimple(1)),
+                        GameState.RoomState.UNKNOWN, "Wrong room state returned")
+        );
+        testState.setRoomState(new RoomSimple(1), GameState.RoomState.LOCKED);
+        assertAll("Test how room state is set",
+                () -> assertEquals(testState.getRoomState(new RoomSimple(0)),
+                        GameState.RoomState.UNLOCKED, "Wrong room state returned"),
+                () -> assertEquals(testState.getRoomState(new RoomSimple(1)),
+                        GameState.RoomState.LOCKED, "Wrong room state returned")
+        );
     }
 }

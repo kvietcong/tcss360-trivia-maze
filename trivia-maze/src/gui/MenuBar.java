@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 public class MenuBar extends JMenuBar {
@@ -46,7 +47,7 @@ public class MenuBar extends JMenuBar {
         About.addActionListener(acton -> aboutMenu());
 
         createMenubar();
-        createMnemonic();
+        initializeMnemonicandAccelerator();
     }
     /**Creates a menu bar.*/
     private void createMenubar() {
@@ -57,14 +58,13 @@ public class MenuBar extends JMenuBar {
         add(File);
         add(Help);
     }
-    /**Creates mnemonic.*/
-    private void createMnemonic() {
+    /**Initializes mnemonic and accelerator keys.*/
+    private void initializeMnemonicandAccelerator() {
         File.setMnemonic(KeyEvent.VK_F);
         Help.setMnemonic(KeyEvent.VK_H);
-        Save.setMnemonic(KeyEvent.VK_S);
-        Load.setMnemonic(KeyEvent.VK_L);
-        About.setMnemonic(KeyEvent.VK_A);
-
+        Save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK));
+        Load.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
+        About.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK));
     }
     /**This method shows the message dialog for about menu.*/
     private void aboutMenu(){

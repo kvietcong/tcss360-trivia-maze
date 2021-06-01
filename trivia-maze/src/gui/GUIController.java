@@ -10,7 +10,7 @@ import java.awt.*;
 
 public class GUIController {
     final public static GameState STATE = GameStateSimple.getInstance();
-
+    private final ImageIcon imageIcon;
     public GUIController() {
         try {
             // Themes from https://github.com/JFormDesigner/FlatLaf/tree/main/flatlaf-intellij-themes
@@ -20,7 +20,7 @@ public class GUIController {
         }
         final JPanel framePanel;
         final CardLayout cards = new CardLayout();
-
+        imageIcon= new ImageIcon("resources/mazeicon.PNG");
         JFrame frame = new JFrame("Trivia Maze");
         frame.setSize(1280, 720);
         framePanel = new JPanel();
@@ -43,7 +43,8 @@ public class GUIController {
                     ), "MAIN");
 
         cards.show(framePanel, "MAIN");
-
+        frame.setJMenuBar(new MenuBar());
+        frame.setIconImage(imageIcon.getImage());
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setJMenuBar(new MenuBar());
         frame.setVisible(true);

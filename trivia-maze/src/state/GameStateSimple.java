@@ -63,8 +63,6 @@ public class GameStateSimple implements GameState {
     }
 
     public void initiateState() {
-        return;
-        /*
         this.maze = new MazeGraph(MazeReader.readMaze("maze-0.txt"));
         this.questions = new HashMap<>();
         this.roomStates = new HashMap<>();
@@ -79,15 +77,11 @@ public class GameStateSimple implements GameState {
         this.maze.forEach(room -> questions.put(room, triviaBase.getRandomQuestion()));
         this.maze.forEach(room -> this.roomStates.put(room, RoomState.UNKNOWN));
         this.roomStates.put(start, RoomState.UNLOCKED);
-        this.maze.getNeighbors(start).forEach(neighbor -> this.roomStates.put(neighbor, RoomState.LOCKED));
-
         this.roomStates.keySet().forEach(room -> System.out.println(room + ": " + this.roomStates.get(room)));
 
         calculatePaths();
 
-        saveState("./default.maze");
-        */
-
+        propertyChangeSupport.firePropertyChange(LOAD.name(), null, this);
     }
 
     public boolean saveState(String savePath) {
@@ -141,7 +135,7 @@ public class GameStateSimple implements GameState {
         Room oldRoom = currentRoom;
         currentRoom = newRoom;
         propertyChangeSupport.firePropertyChange(MOVE.name(), oldRoom, newRoom);
-        if (currentRoom == endRoom) {
+        if (currentRoom.equals(endRoom)) {
             playFile("resources/come on and slam.wav");
             propertyChangeSupport.firePropertyChange(WIN.name(), oldRoom, newRoom);
         }

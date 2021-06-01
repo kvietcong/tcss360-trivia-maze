@@ -6,5 +6,10 @@
       <auth-provider>no-auth</auth-provider>
       <schema-mapping />
     </data-source>
+    <data-source name="trivia [2]" uuid="a34667bc-00e0-491a-8878-2282e8d16242">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="SQLITE" exact-version="0" />
+      <auth-provider>no-auth</auth-provider>
+      <schema-mapping />
+    </data-source>
   </component>
 </project>

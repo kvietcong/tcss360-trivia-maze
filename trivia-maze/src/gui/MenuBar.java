@@ -4,6 +4,7 @@ import state.GameState;
 import state.GameStateSimple;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -23,9 +24,12 @@ public class MenuBar extends JMenuBar {
     private final JMenuItem About;
     /**File chooser*/
     private final JFileChooser fileChooser;
-
+    /**Image for the about menu*/
     private final ImageIcon image;
-    int result;
+    /**Extension filter for saving and loading.*/
+    private final FileNameExtensionFilter extensionfilter;
+
+    private int selectedOption;
     /**Initializes the menu bar*/
     public MenuBar() {
         File = new JMenu("File");
@@ -35,6 +39,7 @@ public class MenuBar extends JMenuBar {
         About = new JMenuItem("About...");
         fileChooser  = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
         image = new ImageIcon("resources/mazeicon.PNG");
+        extensionfilter = new FileNameExtensionFilter("Maze file(.maze)", "maze");
         //action listener for menu items
         Save.addActionListener(action -> saveFile());
         Load.addActionListener(action -> loadFile());
@@ -64,7 +69,7 @@ public class MenuBar extends JMenuBar {
     /**This method shows the message dialog for about menu.*/
     private void aboutMenu(){
        image.setImage(image.getImage().getScaledInstance(50,-1, Image.SCALE_SMOOTH));
-        JOptionPane.showMessageDialog(null,
+        JOptionPane.showMessageDialog(this,
                 "KV,Brandon,Merit" + "\n"
                  + "TCSS 360 Trivia Maze","About",JOptionPane.INFORMATION_MESSAGE,image);
     }
@@ -74,9 +79,11 @@ public class MenuBar extends JMenuBar {
     private void saveFile() {
         fileChooser.setDialogTitle("Save a file");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        result = fileChooser.showSaveDialog(null);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setFileFilter(extensionfilter);
+        selectedOption = fileChooser.showSaveDialog(this);
 
-        if (result == JFileChooser.APPROVE_OPTION) {
+        if (selectedOption == JFileChooser.APPROVE_OPTION) {
             java.io.File file = fileChooser.getSelectedFile();
             state.saveState(file.getPath());
         }
@@ -87,9 +94,11 @@ public class MenuBar extends JMenuBar {
     private void loadFile() {
         fileChooser.setDialogTitle("Open a file");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        result = fileChooser.showOpenDialog(null);
+        fileChooser.setAcceptAllFileFilterUsed(false);
+        fileChooser.setFileFilter(extensionfilter);
+        selectedOption = fileChooser.showOpenDialog(this);
 
-        if (result == JFileChooser.APPROVE_OPTION) {
+        if (selectedOption == JFileChooser.APPROVE_OPTION) {
             java.io.File file = fileChooser.getSelectedFile();
             state.loadState(file.getPath());
         }

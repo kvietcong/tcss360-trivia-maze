@@ -1,7 +1,8 @@
 package state;
 
-import maze.Maze;
-import maze.Room;
+import database.TriviaBase;
+import database.TriviaDatabaseConnection;
+import maze.*;
 import question.Question;
 
 import javax.sound.sampled.*;
@@ -62,9 +63,31 @@ public class GameStateSimple implements GameState {
     }
 
     public void initiateState() {
-        // TODO: Remove this when initiateState is implemented
-        loadState("./test.maze");
-        // TODO: Remove this when initiateState is implemented
+        return;
+        /*
+        this.maze = new MazeGraph(MazeReader.readMaze("maze-0.txt"));
+        this.questions = new HashMap<>();
+        this.roomStates = new HashMap<>();
+        // Room [id = 0] --> Start
+        // Room [id = {size - 1}] --> End
+        Room start = new RoomSimple(0);
+        this.startRoom = start;
+        this.currentRoom = start;
+        this.endRoom = new RoomSimple(this.maze.getRooms().size() - 1);
+
+        TriviaBase triviaBase = new TriviaBase(TriviaDatabaseConnection.getConnection());
+        this.maze.forEach(room -> questions.put(room, triviaBase.getRandomQuestion()));
+        this.maze.forEach(room -> this.roomStates.put(room, RoomState.UNKNOWN));
+        this.roomStates.put(start, RoomState.UNLOCKED);
+        this.maze.getNeighbors(start).forEach(neighbor -> this.roomStates.put(neighbor, RoomState.LOCKED));
+
+        this.roomStates.keySet().forEach(room -> System.out.println(room + ": " + this.roomStates.get(room)));
+
+        calculatePaths();
+
+        saveState("./default.maze");
+        */
+
     }
 
     public boolean saveState(String savePath) {

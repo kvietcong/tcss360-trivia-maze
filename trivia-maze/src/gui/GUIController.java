@@ -43,10 +43,14 @@ public class GUIController {
                     ), "MAIN");
 
         cards.show(framePanel, "MAIN");
-        frame.setJMenuBar(new MenuBar());
         frame.setIconImage(imageIcon.getImage());
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.setJMenuBar(new MenuBar());
+        frame.setJMenuBar(new MenuBar(
+                loadPath -> {
+                    STATE.loadState(loadPath);
+                    cards.show(framePanel, "GAME");
+                })
+        );
         frame.setVisible(true);
         frame.add(framePanel);
         frame.revalidate();

@@ -11,12 +11,15 @@ import java.util.function.Consumer;
 public class MainMenuPanel extends JPanel {
 
     private final GridBagConstraints gbc;
-
     private final GameState state =  GameStateSimple.getInstance();
+    private final Consumer<String> loadPath;
+
     /**
      * Initialize the main menu panel
      * */
-    public MainMenuPanel(Runnable exit, Runnable newGame, Consumer<String> loadGame) {
+    public MainMenuPanel(Runnable exit, Runnable newGame, Consumer<String> loadPath) {
+        this.loadPath = loadPath;
+
         gbc = new GridBagConstraints();
         setLayout(new GridBagLayout());
         setConstraints();
@@ -27,9 +30,9 @@ public class MainMenuPanel extends JPanel {
         add(newGameButton, gbc);
 
         //options button
-        JButton options = new JButton("Load Game");
+        JButton loadButton = new JButton("Load Game");
         gbc.gridy++;
-        add(options,gbc);
+        add(loadButton, gbc);
 
         //exit button
         JButton exitButton = new JButton("Exit");
@@ -38,9 +41,8 @@ public class MainMenuPanel extends JPanel {
 
         //action listener for the buttons
         newGameButton.addActionListener(action -> newGame.run());
-        options.addActionListener(action -> {});
-        exitButton.addActionListener(action -> exit.run());
-        options.addActionListener(action -> loadGame());
+        loadButton.addActionListener(action -> {});
+        loadButton.addActionListener(action -> loadGame());
         exitButton.addActionListener(action -> exit.run());
     }
 
@@ -65,7 +67,7 @@ public class MainMenuPanel extends JPanel {
 
         if (selectedOption == JFileChooser.APPROVE_OPTION) {
             java.io.File file = fileChooser.getSelectedFile();
-            state.loadState(file.getPath());
+            loadPath.accept(file.getPath());
         }
     }
 }

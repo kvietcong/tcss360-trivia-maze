@@ -9,6 +9,7 @@ import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.util.function.Consumer;
 
 public class MenuBar extends JMenuBar {
 
@@ -29,10 +30,13 @@ public class MenuBar extends JMenuBar {
     private final ImageIcon image;
     /**Extension filter for saving and loading.*/
     private final FileNameExtensionFilter extensionfilter;
+    /**Load a path*/
+    private final Consumer<String> loadPath;
 
     private int selectedOption;
     /**Initializes the menu bar*/
-    public MenuBar() {
+    public MenuBar(Consumer<String> loadPath) {
+        this.loadPath = loadPath;
         File = new JMenu("File");
         Help = new JMenu("Help");
         Save = new JMenuItem("Save...");
@@ -100,7 +104,7 @@ public class MenuBar extends JMenuBar {
 
         if (selectedOption == JFileChooser.APPROVE_OPTION) {
             java.io.File file = fileChooser.getSelectedFile();
-            state.loadState(file.getPath());
+            loadPath.accept(file.getPath());
         }
     }
 }

@@ -5,14 +5,13 @@ import question.Question;
 import state.GameState;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Arrays;
 
 public class TriviaPanel extends JPanel {
     // Constructor for a question panel
     public TriviaPanel(Room room, Question question, GameState gameState, Runnable showCurrentInfo) {
-        setLayout(new GridLayout(0, 1));
-
         JPanel container = new JPanel();
         container.setLayout(new BorderLayout());
 
@@ -55,6 +54,7 @@ public class TriviaPanel extends JPanel {
         gbc.gridy++;
         center.add(leaveButton, gbc);
 
+        setBorder(new EmptyBorder(10, 10, 10, 10));
         container.add(center, BorderLayout.CENTER);
         add(container);
         revalidate();

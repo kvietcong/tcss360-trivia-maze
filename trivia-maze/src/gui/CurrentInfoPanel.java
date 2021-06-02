@@ -28,10 +28,10 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
         JPanel centerTitle = new JPanel();
         centerTitle.setLayout(new GridBagLayout());
         mazeTitle.setFont(new Font("Arial", Font.BOLD, 48));
+        centerTitle.add(mazeTitle);
 
         mazeNeighborPanel.setLayout(new GridLayout(0, 1));
 
-        centerTitle.add(mazeTitle);
         setLayout(new BorderLayout());
         add(centerTitle, BorderLayout.NORTH);
         add(mazeNeighborPanel, BorderLayout.CENTER);
@@ -41,11 +41,20 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
         progressBar = new JProgressBar(JProgressBar.VERTICAL, 0, 100);
         progressBar.setStringPainted(true);
 
-        JPanel progress = new JPanel();
-        progress.setLayout(new GridLayout(1, 2));
-        progress.add(progressBar);
-        progress.setPreferredSize(new Dimension(50, 25));
-        add(progress, BorderLayout.EAST);
+        JPanel progressContainer = new JPanel();
+        progressContainer.setLayout(new BoxLayout(progressContainer, BoxLayout.Y_AXIS));
+
+        JPanel progressBarExpander = new JPanel();
+        progressBarExpander.setLayout(new GridLayout(0, 1));
+        progressBarExpander.add(progressBar);
+
+        JLabel progressTitle = new JLabel("Progress  "); // Extra spaces for centering text :(
+        progressTitle.setFont(new Font("Arial", Font.BOLD, 15));
+
+        progressContainer.add(progressTitle);
+        progressContainer.add(progressBarExpander);
+        add(progressContainer, BorderLayout.EAST);
+        setBorder(new EmptyBorder(10, 10, 10, 10));
 
         STATE.addPropertyChangeListener(this);
     }
@@ -57,7 +66,7 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
         mazeNeighborPanel.removeAll();
         mazeNeighborPanel.setBorder(new EmptyBorder(10, 10, 10 , 10));
 
-        mazeTitle.setText("You are in " + STATE.getCurrentRoom().toString());
+        mazeTitle.setText("<html>You are in " + STATE.getCurrentRoom().toString() + "</html>");
 
         int totalDistance = STATE.getDistanceToEnd(STATE.getStartRoom());
         int currentDistance = STATE.getDistanceToEnd(STATE.getCurrentRoom());

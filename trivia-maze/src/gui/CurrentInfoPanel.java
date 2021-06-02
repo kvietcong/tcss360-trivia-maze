@@ -6,6 +6,7 @@ import state.GameState;
 import state.GameStateSimple;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -21,6 +22,7 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
     private final JPanel mazeNeighborPanel = new JPanel();
     private final JLabel mazeTitle = new JLabel();
     private final BiConsumer<Room, Question> triviaButtonFunction;
+    private final JProgressBar progressBar;
 
     public CurrentInfoPanel(BiConsumer<Room, Question> triviaButtonFunction) {
         JPanel centerTitle = new JPanel();
@@ -36,6 +38,15 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
 
         this.triviaButtonFunction = triviaButtonFunction;
 
+        progressBar = new JProgressBar(JProgressBar.VERTICAL, 0, 100);
+        progressBar.setStringPainted(true);
+
+        JPanel progress = new JPanel();
+        progress.setLayout(new GridLayout(1, 2));
+        progress.add(progressBar);
+        progress.setPreferredSize(new Dimension(50, 25));
+        add(progress, BorderLayout.EAST);
+
         STATE.addPropertyChangeListener(this);
     }
 
@@ -44,9 +55,14 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
         unknownButtons.clear();
         lockedButtons.clear();
         mazeNeighborPanel.removeAll();
-        mazeNeighborPanel.add(Box.createVerticalStrut(50));
+        mazeNeighborPanel.setBorder(new EmptyBorder(10, 10, 10 , 10));
 
         mazeTitle.setText("You are in " + STATE.getCurrentRoom().toString());
+
+        int totalDistance = STATE.getDistanceToEnd(STATE.getStartRoom());
+        int currentDistance = STATE.getDistanceToEnd(STATE.getCurrentRoom());
+        progressBar.setValue((int) ((float) (totalDistance - currentDistance) / totalDistance * 100));
+        progressBar.updateUI();
 
         STATE.getCurrentNeighbors().forEach(this::createRoomButton);
 
@@ -54,7 +70,6 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
         mazeNeighborPanel.add(containerizeButtons("Neighboring Unknown Rooms", unknownButtons));
         mazeNeighborPanel.add(containerizeButtons("Neighboring Locked Rooms", lockedButtons));
 
-        mazeNeighborPanel.add(Box.createVerticalStrut(50));
         revalidate();
         repaint();
     }

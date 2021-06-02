@@ -77,7 +77,6 @@ public class GameStateSimple implements GameState {
         this.maze.forEach(room -> questions.put(room, triviaBase.getRandomQuestion()));
         this.maze.forEach(room -> this.roomStates.put(room, RoomState.UNKNOWN));
         this.roomStates.put(start, RoomState.UNLOCKED);
-        this.roomStates.keySet().forEach(room -> System.out.println(room + ": " + this.roomStates.get(room)));
 
         calculatePaths();
 

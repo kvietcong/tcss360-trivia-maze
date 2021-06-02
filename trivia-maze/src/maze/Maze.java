@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Set;
 
 public interface Maze extends Iterable<Room>, Serializable {
-    /** Retrieve all the rooms of the maze. */
+    /** @return Retrieve all the rooms of the maze. */
     Set<Room> getRooms();
 
     /**

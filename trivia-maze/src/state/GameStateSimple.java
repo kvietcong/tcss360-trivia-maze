@@ -2,28 +2,50 @@ package state;
 
 import database.TriviaBase;
 import database.TriviaDatabaseConnection;
-import maze.*;
+import maze.Maze;
+import maze.MazeGraph;
+import maze.MazeReader;
+import maze.Room;
+import maze.RoomSimple;
 import question.Question;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Queue;
+import java.util.Set;
 
-import static state.GameState.GameEvent.*;
+import static state.GameState.GameEvent.LOAD;
+import static state.GameState.GameEvent.LOSE;
+import static state.GameState.GameEvent.MOVE;
+import static state.GameState.GameEvent.ROOM_CHANGE;
+import static state.GameState.GameEvent.SAVE;
+import static state.GameState.GameEvent.WIN;
 
-public class GameStateSimple implements GameState {
-    /** Singleton instance of the game state */
-    final transient private static GameState STATE = new GameStateSimple();
+public final class GameStateSimple implements GameState {
+    /** Singleton instance of the game state. */
+    private static final transient GameState STATE = new GameStateSimple();
 
     /** Object to handle the event firing and listening. */
-    final transient private PropertyChangeSupport propertyChangeSupport;
+    private final transient PropertyChangeSupport propertyChangeSupport;
 
-    /** Stores any clips played during the game */
-    final transient private Set<Clip> audioClips = new HashSet<>();
+    /** Stores any clips played during the game. */
+    private final transient Set<Clip> audioClips = new HashSet<>();
 
-    /** The state's game maze */
+    /** The state's game maze. */
     private Maze maze;
     /** The end (finishing) room. */
     private Room endRoom;

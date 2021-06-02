@@ -1,7 +1,3 @@
-/*
-* This class will talk to the UI (view) and the maze/questions (model) and act as a medium between them (controller)
-*/
-
 package state;
 
 import maze.Maze;
@@ -16,11 +12,17 @@ import java.util.Set;
 public interface GameState extends Serializable {
     /** Events that listeners can hook onto. */
     enum GameEvent {
-        MOVE,           // When the player moves
-        ROOM_CHANGE,    // When a state of a room changes (i.e. UNKNOWN -> LOCKED)
-        WIN, LOSE,      // End state firings
-        SAVE,           // Fired when any saving occurs
-        LOAD            // Fired when a new game is loaded (This includes a new default game)
+        /** When the player moves. */
+        MOVE,
+        /** When a state of a room changes (i.e. UNKNOWN -> LOCKED). */
+        ROOM_CHANGE,
+        /** End state firings. */
+        WIN, LOSE,
+        /** Fired when any saving occurs. */
+        SAVE,
+        /** Fired when a new game is loaded
+         * (This includes a new default game). */
+        LOAD
     }
 
     /** What states a room can be in. */
@@ -43,11 +45,18 @@ public interface GameState extends Serializable {
      */
     boolean saveState(String savePath);
 
-    /** Retrieves the maze of the current game state. */
+    /** @return Retrieves the maze of the current game state. */
     Maze getMaze();
-    /** Retrieves all the questions for each room of the current game state. */
+
+    /** @return Retrieves all the questions for
+     * each room of the current game state. */
     Map<Room, Question> getQuestions();
-    /** Register an attempt to answer a question. */
+
+    /**
+     * Register an attempt to answer a question.
+     * @param room The room to check
+     * @param answer The answer given
+     */
     void attemptQuestion(Room room, String answer);
 
     /**
@@ -57,13 +66,13 @@ public interface GameState extends Serializable {
      */
     Question getRoomQuestion(Room room);
 
-    /** Retrieves the current room of the game state. */
+    /** @return Retrieves the current room of the game state. */
     Room getCurrentRoom();
 
-    /** Retrieves the start room of the game state. */
+    /** @return Retrieves the start room of the game state. */
     Room getStartRoom();
 
-    /** Retrieves the end room of the game state. */
+    /** @return Retrieves the end room of the game state. */
     Room getEndRoom();
 
     /**
@@ -81,7 +90,8 @@ public interface GameState extends Serializable {
     /**
      * Get the amount of rooms away a given room is from the end.
      * @param room Room to query for distance.
-     * @return How far away the given room is from the end. -1 is returned if there is no path.
+     * @return How far away the given room is from the end.
+     *         -1 is returned if there is no path.
      */
     int getDistanceToEnd(Room room);
 
@@ -101,13 +111,13 @@ public interface GameState extends Serializable {
 
     /**
      * Add a new object that will listen to changes.
-     * @param theListener The object that will now listen for game state events.
+     * @param theListener The object that will now listen for game events.
      */
-    void addPropertyChangeListener(final PropertyChangeListener theListener);
+    void addPropertyChangeListener(PropertyChangeListener theListener);
 
     /**
      * Remove an object that will listen to changes.
-     * @param theListener The object that will no longer listen for game state events.
+     * @param theListener The object that will no longer listen for game events.
      */
-    void removePropertyChangeListener(final PropertyChangeListener theListener);
+    void removePropertyChangeListener(PropertyChangeListener theListener);
 }

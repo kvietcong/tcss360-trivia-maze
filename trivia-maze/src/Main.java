@@ -1,9 +1,15 @@
 import database.TriviaDatabaseConnection;
 import gui.GUIController;
 
-import java.awt.*;
+import java.awt.EventQueue;
 
-public class Main {
+public final class Main {
+    private Main() { }
+
+    /**
+     * Entry point into the program.
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         EventQueue.invokeLater(GUIController::new);
         // Makes sure the database connection is not left open

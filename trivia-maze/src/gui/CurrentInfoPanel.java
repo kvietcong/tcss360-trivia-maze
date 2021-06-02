@@ -5,9 +5,16 @@ import question.Question;
 import state.GameState;
 import state.GameStateSimple;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
@@ -15,6 +22,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 
 public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
+    /** State of the game. */
     private static final GameState STATE = GameStateSimple.getInstance();
     private final Set<JRoomButton> unlockedButtons = new HashSet<>();
     private final Set<JRoomButton> unknownButtons = new HashSet<>();
@@ -24,7 +32,7 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
     private final BiConsumer<Room, Question> triviaButtonFunction;
     private final JProgressBar progressBar;
 
-    public CurrentInfoPanel(BiConsumer<Room, Question> triviaButtonFunction) {
+    public CurrentInfoPanel(final BiConsumer<Room, Question> triviaButtonFunction) {
         JPanel centerTitle = new JPanel();
         centerTitle.setLayout(new GridBagLayout());
         mazeTitle.setFont(new Font("Arial", Font.BOLD, 48));

@@ -85,7 +85,7 @@ public final class GameStateSimple implements GameState {
     }
 
     public void initiateState() {
-        this.maze = new MazeGraph(MazeReader.readMaze("maze-0.txt"));
+        this.maze = new MazeGraph(MazeReader.readMaze("./resources/maze-0.txt"));
         this.questions = new HashMap<>();
         this.roomStates = new HashMap<>();
         // Room [id = 0] --> Start

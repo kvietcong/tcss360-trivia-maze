@@ -6,11 +6,11 @@ import java.util.*;
 
 public final class MazeReader {
 
-    public static Map<Room, Set<Room>> readMaze(String fileName) {
+    public static Map<Room, Set<Room>> readMaze(String filePath) {
         Map<Room, Set<Room>> rooms = new HashMap<>();
         Scanner input;
         try {
-            input = new Scanner(new File("src/maze/" + fileName));
+            input = new Scanner(new File(filePath));
         } catch (FileNotFoundException e) {
             return null;
         }

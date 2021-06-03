@@ -3,7 +3,6 @@
     <output-path>$PROJECT_DIR$/out/artifacts/trivia_maze_jar</output-path>
     <root id="archive" name="trivia-maze.jar">
       <element id="module-output" name="trivia-maze" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/lib/sqlite-jdbc-3.34.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/flatlaf-1.2.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/flatlaf-intellij-themes-1.2.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/junit-jupiter-5.7.0.jar" path-in-jar="/" />
@@ -14,18 +13,7 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/junit-jupiter-params-5.7.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/junit-jupiter-engine-5.7.0.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/junit-platform-engine-1.7.0.jar" path-in-jar="/" />
-      <element id="file-copy" path="$PROJECT_DIR$/lib/flatlaf-1.2.jar" />
-      <element id="file-copy" path="$PROJECT_DIR$/lib/flatlaf-intellij-themes-1.2.jar" />
-      <element id="file-copy" path="$PROJECT_DIR$/lib/junit-jupiter-5.7.0.jar" />
-      <element id="file-copy" path="$PROJECT_DIR$/lib/junit-jupiter-api-5.7.0.jar" />
-      <element id="file-copy" path="$PROJECT_DIR$/lib/apiguardian-api-1.1.0.jar" />
-      <element id="file-copy" path="$PROJECT_DIR$/lib/opentest4j-1.2.0.jar" />
-      <element id="file-copy" path="$PROJECT_DIR$/lib/junit-platform-commons-1.7.0.jar" />
-      <element id="file-copy" path="$PROJECT_DIR$/lib/junit-jupiter-params-5.7.0.jar" />
-      <element id="file-copy" path="$PROJECT_DIR$/lib/junit-jupiter-engine-5.7.0.jar" />
-      <element id="file-copy" path="$PROJECT_DIR$/lib/junit-platform-engine-1.7.0.jar" />
-      <element id="file-copy" path="$PROJECT_DIR$/lib/sqlite-jdbc-3.34.0.jar" />
-      <element id="dir-copy" path="$PROJECT_DIR$/resources" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/sqlite-jdbc-3.34.0.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

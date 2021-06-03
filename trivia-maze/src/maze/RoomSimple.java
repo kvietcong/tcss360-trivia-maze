@@ -24,7 +24,8 @@ public class RoomSimple extends AbstractRoom {
     @Override
     public boolean equals(Object other) {
         if (other.getClass() != this.getClass()) {
-            throw new IllegalArgumentException("You are comparing two different types");
+            throw new IllegalArgumentException(
+                    "You are comparing two different types");
         }
         return this.id == ((RoomSimple) other).id;
     }
@@ -40,7 +41,8 @@ public class RoomSimple extends AbstractRoom {
     @Override
     public int compareTo(Room other) {
         if (other == null) {
-            throw new IllegalArgumentException("You can't compare a null room!");
+            throw new IllegalArgumentException(
+                    "You can't compare a null room!");
         }
         return Integer.compare(id, other.getID());
     }

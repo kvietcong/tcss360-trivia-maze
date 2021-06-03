@@ -1,5 +1,6 @@
 package gui;
 
+import constants.C;
 import maze.Room;
 import question.Question;
 import state.GameState;
@@ -45,7 +46,7 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
     public CurrentInfoPanel(BiConsumer<Room, Question> triviaButtonFunction) {
         JPanel centerTitle = new JPanel();
         centerTitle.setLayout(new GridBagLayout());
-        currentRoomTitle.setFont(new Font("Arial", Font.BOLD, UI.H1));
+        currentRoomTitle.setFont(new Font("Arial", Font.BOLD, C.H1));
         centerTitle.add(currentRoomTitle);
 
         mazeNeighborPanel.setLayout(new GridLayout(0, 1));
@@ -57,7 +58,7 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
         this.triviaButtonFunction = triviaButtonFunction;
 
         progressBar = new JProgressBar(
-                JProgressBar.VERTICAL, 0, UI.MAX_PROGRESS);
+                JProgressBar.VERTICAL, 0, C.MAX_PROGRESS);
         progressBar.setStringPainted(true);
 
         JPanel progressContainer = new JPanel();
@@ -70,12 +71,12 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
 
         // Extra spaces for centering text :(
         JLabel progressTitle = new JLabel("Progress  ");
-        progressTitle.setFont(new Font("Arial", Font.BOLD, UI.H4));
+        progressTitle.setFont(new Font("Arial", Font.BOLD, C.H4));
 
         progressContainer.add(progressTitle);
         progressContainer.add(progressBarExpander);
         add(progressContainer, BorderLayout.EAST);
-        setBorder(UI.BORDER);
+        setBorder(C.BORDER);
 
         STATE.addPropertyChangeListener(this);
     }
@@ -85,9 +86,9 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
         unknownButtons.clear();
         lockedButtons.clear();
         mazeNeighborPanel.removeAll();
-        mazeNeighborPanel.setBorder(UI.BORDER);
+        mazeNeighborPanel.setBorder(C.BORDER);
 
-        currentRoomTitle.setText(UI.wrapHTML(
+        currentRoomTitle.setText(C.wrapHTML(
                 "You are in " + STATE.getCurrentRoom().toString()));
 
         int totalDistance = STATE.getDistanceToEnd(STATE.getStartRoom());
@@ -95,7 +96,7 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
         progressBar.setValue((int)
                 ((float) (totalDistance - currentDistance)
                         / totalDistance
-                        * UI.MAX_PROGRESS));
+                        * C.MAX_PROGRESS));
         progressBar.updateUI();
 
         STATE.getCurrentNeighbors().forEach(this::createRoomButton);
@@ -114,7 +115,7 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
     private JPanel containerizeButtons(String label, Set<JRoomButton> buttons) {
         JPanel container = new JPanel();
         container.setLayout(new FlowLayout());
-        container.add(new JLabel(UI.wrapHTML(label)));
+        container.add(new JLabel(C.wrapHTML(label)));
         buttons.stream().sorted().forEach(container::add);
         return container;
     }
@@ -137,7 +138,7 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
 
 
         JRoomButton newButton =
-                new JRoomButton(UI.wrapHTML(label.toString()), room);
+                new JRoomButton(C.wrapHTML(label.toString()), room);
 
         switch (state) {
             case UNLOCKED -> {

@@ -1,5 +1,6 @@
 package gui;
 
+import constants.C;
 import state.GameState;
 
 import javax.swing.JButton;
@@ -25,11 +26,11 @@ public class EndPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
 
-        JLabel title = new JLabel(UI.wrapHTML(
+        JLabel title = new JLabel(C.wrapHTML(
                 status == GameState.GameEvent.WIN
                         ? "You Won!!!"
                         : "You Lost :("));
-        title.setFont(new Font("Arial", Font.BOLD, UI.H1 * 2));
+        title.setFont(new Font("Arial", Font.BOLD, C.H1 * 2));
         center.add(title, gbc);
 
         gbc.gridy++;

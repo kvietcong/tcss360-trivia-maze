@@ -1,5 +1,6 @@
 package gui;
 
+import constants.C;
 import maze.Room;
 import question.Question;
 import state.GameState;
@@ -29,17 +30,17 @@ public class TriviaPanel extends JPanel {
         container.setLayout(new BorderLayout());
 
         JLabel title = new JLabel("Question for " + room.toString());
-        title.setFont(new Font("Arial", Font.BOLD, UI.H1));
+        title.setFont(new Font("Arial", Font.BOLD, C.H1));
         container.add(title, BorderLayout.NORTH);
 
         JPanel center = new JPanel();
         center.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
-        gbc.ipady = UI.PADDING;
+        gbc.ipady = C.PADDING;
 
         JLabel questionTitle = new JLabel(question.getQuestion());
-        questionTitle.setFont(new Font("Arial", Font.BOLD, UI.H2));
+        questionTitle.setFont(new Font("Arial", Font.BOLD, C.H2));
         center.add(questionTitle, gbc);
 
         JPanel answersContainer = new JPanel();
@@ -64,12 +65,12 @@ public class TriviaPanel extends JPanel {
         JButton leaveButton = new JButton("Back out");
         leaveButton.addActionListener(action -> showCurrentInfo.run());
         leaveButton.setBackground(Color.RED);
-        leaveButton.setFont(new Font("Arial", Font.BOLD, UI.H3));
+        leaveButton.setFont(new Font("Arial", Font.BOLD, C.H3));
         leaveButton.setForeground(Color.WHITE);
         gbc.gridy++;
         center.add(leaveButton, gbc);
 
-        setBorder(UI.BORDER);
+        setBorder(C.BORDER);
         container.add(center, BorderLayout.CENTER);
         add(container);
         revalidate();

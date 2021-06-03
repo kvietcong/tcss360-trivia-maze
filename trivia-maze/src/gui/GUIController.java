@@ -2,6 +2,7 @@ package gui;
 
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.intellijthemes.FlatNordIJTheme;
+import constants.C;
 import state.GameState;
 import state.GameStateSimple;
 
@@ -27,9 +28,9 @@ public class GUIController {
 
         JPanel framePanel;
         CardLayout cards = new CardLayout();
-        ImageIcon imageIcon = new ImageIcon("resources/mazeicon.PNG");
+        ImageIcon imageIcon = new ImageIcon("resources/mazeicon.png");
         JFrame frame = new JFrame("Trivia Maze");
-        frame.setSize(UI.WIDTH, UI.HEIGHT);
+        frame.setSize(C.WIDTH, C.HEIGHT);
         framePanel = new JPanel();
         framePanel.setLayout(cards);
 

@@ -1,12 +1,13 @@
-package gui;
+package constants;
 
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
 
 /**
  * Class to hold constants and stuff.
  */
-public final class UI {
+public final class C {
     /** Default border. */
     public static final Border BORDER = new EmptyBorder(10, 10, 10, 10);
     /** Max value of progress bar. */
@@ -26,12 +27,16 @@ public final class UI {
     /** Default path to open in. */
     public static final String PATH = "./";
     /** Default Padding. */
-    public static final int PADDING = 25;
+    public static final int PADDING = 20;
+    /** Default gain. */
+    public static final float GAIN = -20;
+    /** Default Insets. */
+    public static Insets INSET = new Insets(PADDING, PADDING, PADDING, PADDING);
 
-    private UI() { }
+    private C() { }
 
     /**
-     * Wrap a string in HTML tags (Usually for proper wrapping in UI).
+     * Wrap a string in HTML tags (Usually for proper wrapping in C).
      * @param toWrap String to be wrapped.
      * @return HTML wrapped string
      */

@@ -2,6 +2,7 @@ package state;
 
 import database.TriviaBase;
 import database.TriviaDatabaseConnection;
+import constants.C;
 import maze.Maze;
 import maze.MazeGraph;
 import maze.MazeReader;
@@ -65,25 +66,6 @@ public final class GameStateSimple implements GameState {
         propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
-    public Maze getMaze() { return maze; }
-    public Room getEndRoom() { return endRoom; }
-    public Room getStartRoom() { return startRoom; }
-    public Room getCurrentRoom() { return currentRoom; }
-    public static GameState getInstance() { return STATE; }
-    public Map<Room, Question> getQuestions() { return questions; }
-    public Set<Room> getNeighbors(Room room) { return maze.getNeighbors(room); }
-    public Set<Room> getCurrentNeighbors() { return getNeighbors(currentRoom); }
-    public RoomState getRoomState(Room room) { return roomStates.getOrDefault(room, null); }
-    public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
-    public int getDistanceToEnd(Room room) { return distancesToEndRoom.getOrDefault(room, -1); }
-
-    public void setRoomState(Room room, RoomState newState) {
-        RoomState oldState = getRoomState(room);
-        roomStates.put(room, newState);
-        propertyChangeSupport.firePropertyChange(ROOM_CHANGE.name(), oldState, newState);
-        calculatePaths();
-    }
-
     public void initiateState() {
         this.maze = new MazeGraph(MazeReader.readMaze("./resources/maze-0.txt"));
         this.questions = new HashMap<>();
@@ -135,6 +117,55 @@ public final class GameStateSimple implements GameState {
         }
     }
 
+    public Maze getMaze() { return maze; }
+    public Room getEndRoom() { return endRoom; }
+    public Room getStartRoom() { return startRoom; }
+    public Room getCurrentRoom() { return currentRoom; }
+    public static GameState getInstance() { return STATE; }
+    public Map<Room, Question> getQuestions() { return questions; }
+    public Set<Room> getNeighbors(Room room) { return maze.getNeighbors(room); }
+    public Set<Room> getCurrentNeighbors() { return getNeighbors(currentRoom); }
+    public RoomState getRoomState(Room room) { return roomStates.getOrDefault(room, null); }
+    public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
+    public int getDistanceToEnd(Room room) { return distancesToEndRoom.getOrDefault(room, -1); }
+
+    public void setRoomState(Room room, RoomState newState) {
+        RoomState oldState = getRoomState(room);
+        roomStates.put(room, newState);
+        propertyChangeSupport.firePropertyChange(ROOM_CHANGE.name(), oldState, newState);
+        calculatePaths();
+    }
+
+    public void attemptQuestion(Room room, String answer) {
+        Question question = getRoomQuestion(room);
+        if (question.isCorrectAnswer(answer)) {
+            playFile("resources/correct.wav");
+            setRoomState(room, RoomState.UNLOCKED);
+        } else {
+            playFile("resources/incorrect.wav");
+            if (room.equals(endRoom)) { return; } // Make it so you can't lock the final room
+            setRoomState(room, RoomState.LOCKED);
+        }
+    }
+
+    public void moveToRoom(Room newRoom) {
+        Room oldRoom = currentRoom;
+        currentRoom = newRoom;
+        propertyChangeSupport.firePropertyChange(MOVE.name(), oldRoom, newRoom);
+        if (currentRoom.equals(endRoom)) {
+            playFile("resources/come on and slam.wav");
+            propertyChangeSupport.firePropertyChange(WIN.name(), oldRoom, newRoom);
+        }
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+
     /**
      * Makes the current game state emulate the new one.
      * (The current game state won't inherit things like the singleton
@@ -153,30 +184,8 @@ public final class GameStateSimple implements GameState {
                 LOAD.name(), null, this);
     }
 
-    public void moveToRoom(Room newRoom) {
-        Room oldRoom = currentRoom;
-        currentRoom = newRoom;
-        propertyChangeSupport.firePropertyChange(MOVE.name(), oldRoom, newRoom);
-        if (currentRoom.equals(endRoom)) {
-            playFile("resources/come on and slam.wav");
-            propertyChangeSupport.firePropertyChange(WIN.name(), oldRoom, newRoom);
-        }
-    }
-
-    public void attemptQuestion(Room room, String answer) {
-        Question question = getRoomQuestion(room);
-        if (question.isCorrectAnswer(answer)) {
-            playFile("resources/correct.wav");
-            setRoomState(room, RoomState.UNLOCKED);
-        } else {
-            playFile("resources/incorrect.wav");
-            if (room.equals(endRoom)) { return; } // Make it so you can't lock the final room
-            setRoomState(room, RoomState.LOCKED);
-        }
-    }
-
     /**
-     * Calculate every room's distance to the final room
+     * Calculate every room's distance to the final room.
      */
     private void calculatePaths() {
         if (maze == null) { return; }
@@ -200,14 +209,16 @@ public final class GameStateSimple implements GameState {
         distancesToEndRoom.put(endRoom, 0);
 
         while (!toSearch.isEmpty()) {
-            Room currentRoom = toSearch.poll();
-            Set<Room> neighbors = reversedMaze.get(currentRoom);
+            Room current = toSearch.poll();
+            Set<Room> neighbors = reversedMaze.get(current);
             for (Room neighbor : neighbors) {
                 if (!searched.contains(neighbor)
                         && getRoomState(neighbor) != RoomState.LOCKED) {
                     toSearch.add(neighbor);
                     searched.add(neighbor);
-                    distancesToEndRoom.put(neighbor, distancesToEndRoom.get(currentRoom) + 1);
+                    distancesToEndRoom.put(
+                            neighbor,
+                            distancesToEndRoom.get(current) + 1);
                     if (neighbor.equals(endRoom)) { break; }
                 }
             }
@@ -225,10 +236,13 @@ public final class GameStateSimple implements GameState {
      */
     private void playFile(String file) {
         try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(file));
+            AudioInputStream audioInputStream =
+                    AudioSystem.getAudioInputStream(new File(file));
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
-            ((FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN)).setValue(-20.0f);
+            ((FloatControl)
+                    clip.getControl(FloatControl.Type.MASTER_GAIN)
+            ).setValue(C.GAIN);
             clip.start();
             audioClips.add(clip);
         } catch (Exception exception) {
@@ -243,14 +257,6 @@ public final class GameStateSimple implements GameState {
     private void clearSound() {
         audioClips.forEach(DataLine::stop);
         audioClips.clear();
-    }
-
-    public void addPropertyChangeListener(final PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(final PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
     // TODO: BELOW HERE IS FOR TESTING. DELETE WHEN DONE

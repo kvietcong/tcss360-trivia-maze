@@ -4,19 +4,22 @@ import state.GameState;
 import state.GameState.RoomState;
 import state.GameStateSimple;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import java.awt.CardLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import static state.GameState.GameEvent;
 
 public class GamePanel extends JPanel implements PropertyChangeListener {
+    /** Current game state. */
     private static final GameState STATE = GameStateSimple.getInstance();
+    /** Function to show main menu. */
     private final Runnable showMainMenu;
 
     /**
-     * Initialize a new panel to handle game GUI
+     * Initialize a new panel to handle game GUI.
      * @param showMainMenu Go back to main menu
      */
     public GamePanel(Runnable showMainMenu) {
@@ -27,7 +30,9 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
         setLayout(new CardLayout());
         add(new CurrentInfoPanel((room, question) -> {
             triviaPanel.removeAll();
-            triviaPanel.add(new TriviaPanel(room, question, STATE, () -> show("CURRENT_INFO")));
+            triviaPanel.add(new TriviaPanel(
+                    room, question, STATE,
+                    () -> show("CURRENT_INFO")));
             show("ANSWER_QUESTION");
             revalidate();
             repaint();
@@ -35,7 +40,6 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
         add(triviaPanel, "ANSWER_QUESTION");
     }
 
-    /** Show specific card of the layout */
     private void show(String card) { ((CardLayout) getLayout()).show(this, card); }
 
     /**
@@ -64,7 +68,8 @@ public class GamePanel extends JPanel implements PropertyChangeListener {
                 add(new EndPanel(gameEvent, showMainMenu), "END");
                 show("END");
             }
-            default -> throw new IllegalStateException("Unexpected value: " + event.getPropertyName());
+            default -> throw new IllegalStateException(
+                    "Unexpected value: " + event.getPropertyName());
         }
         revalidate();
         repaint();

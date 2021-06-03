@@ -5,30 +5,37 @@ import com.formdev.flatlaf.intellijthemes.FlatNordIJTheme;
 import state.GameState;
 import state.GameStateSimple;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.WindowConstants;
+import java.awt.CardLayout;
 
 public class GUIController {
-    final public static GameState STATE = GameStateSimple.getInstance();
-    private final ImageIcon imageIcon;
+    /** Current game state. */
+    public static final GameState STATE = GameStateSimple.getInstance();
+
+    /**
+     * Creates an instance that handles much of the GUI interaction.
+     */
     public GUIController() {
         try {
-            // Themes from https://github.com/JFormDesigner/FlatLaf/tree/main/flatlaf-intellij-themes
             FlatLaf.setup(new FlatNordIJTheme());
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-        final JPanel framePanel;
-        final CardLayout cards = new CardLayout();
-        imageIcon= new ImageIcon("resources/mazeicon.PNG");
+
+        JPanel framePanel;
+        CardLayout cards = new CardLayout();
+        ImageIcon imageIcon = new ImageIcon("resources/mazeicon.PNG");
         JFrame frame = new JFrame("Trivia Maze");
-        frame.setSize(1280, 720);
+        frame.setSize(UI.WIDTH, UI.HEIGHT);
         framePanel = new JPanel();
         framePanel.setLayout(cards);
 
         framePanel.add(new GamePanel(() -> {
             cards.show(framePanel, "MAIN");
-            STATE.initiateState();                  // Basically used to clear sounds
+            STATE.initiateState(); // Basically used to clear sounds
         }), "GAME");
 
         framePanel.add(new MainMenuPanel(frame::dispose,

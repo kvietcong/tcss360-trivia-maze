@@ -69,6 +69,7 @@ public class MenuBar extends JMenuBar {
         createMenuBar();
         initializeMnemonicAndAccelerator();
     }
+
     /**Creates a menu bar.*/
     private void createMenuBar() {
         fileMenu.add(saveItem);
@@ -76,10 +77,13 @@ public class MenuBar extends JMenuBar {
         fileMenu.add(loadItem);
         fileMenu.addSeparator();
         fileMenu.add(mainMenuItem);
+
         helpMenu.add(aboutItem);
+
         add(fileMenu);
         add(helpMenu);
     }
+
     /**Initializes mnemonic and accelerator keys.*/
     private void initializeMnemonicAndAccelerator() {
         fileMenu.setMnemonic(KeyEvent.VK_F);
@@ -100,6 +104,7 @@ public class MenuBar extends JMenuBar {
                 + "TCSS 360 Trivia Maze", "About",
                 JOptionPane.INFORMATION_MESSAGE, image);
     }
+
     /**
      * This method saves the game state info.
      */
@@ -115,6 +120,7 @@ public class MenuBar extends JMenuBar {
             state.saveState(file.getPath() + ".maze");
         }
     }
+
     /**
      * This method loads the game state given the path.
      */

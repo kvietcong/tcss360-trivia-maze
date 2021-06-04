@@ -6,20 +6,17 @@ import question.Question;
 import state.GameState;
 import state.GameStateSimple;
 
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
     /** State of the game. */
@@ -58,24 +55,22 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
         this.triviaButtonFunction = triviaButtonFunction;
 
         progressBar = new JProgressBar(
-                JProgressBar.VERTICAL, 0, C.MAX_PROGRESS);
+                JProgressBar.HORIZONTAL, 0, C.MAX_PROGRESS);
         progressBar.setStringPainted(true);
 
+        JLabel progressTitle = new JLabel("Progress");
+        progressTitle.setFont(new Font("Arial", Font.BOLD, C.H3));
+        JPanel progressTitleCenter = new JPanel();
+        progressTitleCenter.setLayout(new GridBagLayout());
+        progressTitleCenter.add(progressTitle);
+
         JPanel progressContainer = new JPanel();
-        progressContainer.setLayout(
-                new BoxLayout(progressContainer, BoxLayout.Y_AXIS));
+        progressContainer.setPreferredSize(new Dimension(-1, C.H1 * 2));
+        progressContainer.setLayout(new GridLayout(0, 1));
+        progressContainer.add(progressTitleCenter);
+        progressContainer.add(progressBar);
 
-        JPanel progressBarExpander = new JPanel();
-        progressBarExpander.setLayout(new GridLayout(0, 1));
-        progressBarExpander.add(progressBar);
-
-        // Extra spaces for centering text :(
-        JLabel progressTitle = new JLabel("Progress  ");
-        progressTitle.setFont(new Font("Arial", Font.BOLD, C.H4));
-
-        progressContainer.add(progressTitle);
-        progressContainer.add(progressBarExpander);
-        add(progressContainer, BorderLayout.EAST);
+        add(progressContainer, BorderLayout.SOUTH);
         setBorder(C.BORDER);
 
         STATE.addPropertyChangeListener(this);
@@ -102,11 +97,11 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
         STATE.getCurrentNeighbors().forEach(this::createRoomButton);
 
         mazeNeighborPanel.add(containerizeButtons(
-                "Neighboring Unlocked Rooms", unlockedButtons));
-        mazeNeighborPanel.add(containerizeButtons(
-                "Neighboring Unknown Rooms", unknownButtons));
-        mazeNeighborPanel.add(containerizeButtons(
-                "Neighboring Locked Rooms", lockedButtons));
+                "Neighboring Rooms", Stream.of(
+                        unlockedButtons, unknownButtons, lockedButtons)
+                        .flatMap(Collection::stream)
+                        .collect(Collectors.toSet())
+        ));
 
         revalidate();
         repaint();
@@ -143,15 +138,24 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
         switch (state) {
             case UNLOCKED -> {
                 newButton.addActionListener(action -> STATE.moveToRoom(room));
+                newButton.setForeground(Color.decode("#2E3440"));
+                newButton.setBackground(Color.decode("#A3BE8C"));
                 unlockedButtons.add(newButton);
             }
             case UNKNOWN -> {
                 newButton.addActionListener(action ->
                         triviaButtonFunction.accept(room, question));
+                newButton.setForeground(Color.decode("#2E3440"));
+                newButton.setBackground(Color.decode("#EBCB8B"));
                 unknownButtons.add(newButton);
             }
             case LOCKED -> {
-                newButton.setEnabled(false);
+                newButton.setBackground(Color.decode("#BF616A"));
+                newButton.addActionListener(action -> {
+                    JOptionPane.showMessageDialog(this,
+                            "This room is locked FOREVER",
+                            "Locked Room!", JOptionPane.ERROR_MESSAGE);
+                });
                 lockedButtons.add(newButton);
             }
             default -> throw new

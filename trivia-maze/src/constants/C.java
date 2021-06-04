@@ -21,9 +21,9 @@ public final class C {
     /** Heading 4 size. */
     public static final int H4 = 16;
     /** Preferred Window Width. */
-    public static final int WIDTH = 1280;
+    public static final int WIDTH = 680;
     /** Preferred Window Height. */
-    public static final int HEIGHT = 720;
+    public static final int HEIGHT = 480;
     /** Default path to open in. */
     public static final String PATH = "./";
     /** Default Padding. */

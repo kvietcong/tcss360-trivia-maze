@@ -2,7 +2,7 @@ package constants;
 
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.Insets;
 
 /**
  * Class to hold constants and stuff.
@@ -31,7 +31,7 @@ public final class C {
     /** Default gain. */
     public static final float GAIN = -20;
     /** Default Insets. */
-    public static Insets INSET = new Insets(PADDING, PADDING, PADDING, PADDING);
+    public static final Insets INSET = new Insets(PADDING, PADDING, PADDING, PADDING);
 
     private C() { }
 

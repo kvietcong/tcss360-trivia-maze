@@ -28,6 +28,8 @@ public class MenuBar extends JMenuBar {
     private final JMenuItem saveItem;
     /** Load Menu. */
     private final JMenuItem loadItem;
+    /** Entry to show main menu. */
+    private final JMenuItem mainMenuItem;
     /** About Menu. */
     private final JMenuItem aboutItem;
     /** File chooser. */
@@ -44,11 +46,13 @@ public class MenuBar extends JMenuBar {
     /**
      * Initializes the menu bar.
      * @param loadPath Function to load the game at the given path.
+     * @param showMainMenu Function to go back to the main menu.
      */
-    public MenuBar(Consumer<String> loadPath) {
+    public MenuBar(Consumer<String> loadPath, Runnable showMainMenu) {
         this.loadPath = loadPath;
         fileMenu = new JMenu("File");
         helpMenu = new JMenu("Help");
+        mainMenuItem = new JMenuItem("Go to Main Menu");
         saveItem = new JMenuItem("Save...");
         loadItem = new JMenuItem("Load...");
         aboutItem = new JMenuItem("About...");
@@ -60,6 +64,7 @@ public class MenuBar extends JMenuBar {
         saveItem.addActionListener(action -> saveFile());
         loadItem.addActionListener(action -> loadFile());
         aboutItem.addActionListener(acton -> aboutMenu());
+        mainMenuItem.addActionListener(action -> showMainMenu.run());
 
         createMenuBar();
         initializeMnemonicAndAccelerator();
@@ -69,6 +74,8 @@ public class MenuBar extends JMenuBar {
         fileMenu.add(saveItem);
         fileMenu.addSeparator();
         fileMenu.add(loadItem);
+        fileMenu.addSeparator();
+        fileMenu.add(mainMenuItem);
         helpMenu.add(aboutItem);
         add(fileMenu);
         add(helpMenu);
@@ -87,7 +94,7 @@ public class MenuBar extends JMenuBar {
     /** This method shows the message dialog for about menu.*/
     private void aboutMenu() {
         image.setImage(image.getImage().
-                getScaledInstance(50, -1, Image.SCALE_SMOOTH));
+                getScaledInstance(C.H1, -1, Image.SCALE_SMOOTH));
         JOptionPane.showMessageDialog(this,
                 "Created by: KV, Brandon, and Merit" + "\n"
                 + "TCSS 360 Trivia Maze", "About",

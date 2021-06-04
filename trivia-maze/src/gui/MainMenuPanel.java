@@ -56,7 +56,7 @@ public class MainMenuPanel extends JPanel {
     }
 
     private void loadGame() {
-        JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser(C.PATH);
         FileNameExtensionFilter extensionFilter =
                 new FileNameExtensionFilter("Maze file(.maze)", "maze");
         int selectedOption;

@@ -57,7 +57,8 @@ public class GUIController {
                 loadPath -> {
                     STATE.loadState(loadPath);
                     cards.show(framePanel, "GAME");
-                })
+                },
+                () -> cards.show(framePanel, "MAIN"))
         );
         frame.setVisible(true);
         frame.add(framePanel);

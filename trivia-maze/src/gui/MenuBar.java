@@ -70,7 +70,7 @@ public class MenuBar extends JMenuBar {
         initializeMnemonicAndAccelerator();
     }
 
-    /**Creates a menu bar.*/
+    /** Creates a menu bar. */
     private void createMenuBar() {
         fileMenu.add(saveItem);
         fileMenu.addSeparator();
@@ -84,7 +84,7 @@ public class MenuBar extends JMenuBar {
         add(helpMenu);
     }
 
-    /**Initializes mnemonic and accelerator keys.*/
+    /** Initializes mnemonic and accelerator keys. */
     private void initializeMnemonicAndAccelerator() {
         fileMenu.setMnemonic(KeyEvent.VK_F);
         helpMenu.setMnemonic(KeyEvent.VK_H);

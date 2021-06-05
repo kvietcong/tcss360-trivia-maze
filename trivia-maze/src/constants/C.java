@@ -9,7 +9,8 @@ import java.awt.Insets;
  */
 public final class C {
     /** Default border. */
-    public static final Border BORDER = new EmptyBorder(10, 10, 10, 10);
+    public static final Border BORDER =
+            new EmptyBorder(10, 10, 10, 10);
     /** Max value of progress bar. */
     public static final int MAX_PROGRESS = 100;
     /** Heading 1 size. */
@@ -31,7 +32,8 @@ public final class C {
     /** Default gain. */
     public static final float GAIN = -20;
     /** Default Insets. */
-    public static final Insets INSET = new Insets(PADDING, PADDING, PADDING, PADDING);
+    public static final Insets INSET =
+            new Insets(PADDING, PADDING, PADDING, PADDING);
 
     private C() { }
 

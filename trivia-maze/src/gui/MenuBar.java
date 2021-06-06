@@ -4,14 +4,9 @@ import constants.C;
 import state.GameState;
 import state.GameStateSimple;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.JTextComponent;
 import java.awt.Image;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -32,8 +27,12 @@ public class MenuBar extends JMenuBar {
     private final JMenuItem mainMenuItem;
     /** About Menu. */
     private final JMenuItem aboutItem;
+    /**Instruction Menu*/
+    private final JMenuItem instructionItem;
     /** File chooser. */
     private final JFileChooser fileChooser;
+    /**Text Label for the game instruction*/
+   private final JLabel textLabel;
     /** Image for the about menu. */
     private final ImageIcon image;
     /** Extension filter for saving and loading. */
@@ -56,7 +55,9 @@ public class MenuBar extends JMenuBar {
         saveItem = new JMenuItem("Save...");
         loadItem = new JMenuItem("Load...");
         aboutItem = new JMenuItem("About...");
+        instructionItem = new JMenuItem("Game Instruction");
         fileChooser  = new JFileChooser(C.PATH);
+        textLabel = new JLabel();
         image = new ImageIcon("resources/mazeicon.png");
         extensionFilter = new FileNameExtensionFilter(
                 "Maze file(.maze)", "maze");
@@ -65,6 +66,7 @@ public class MenuBar extends JMenuBar {
         loadItem.addActionListener(action -> loadFile());
         aboutItem.addActionListener(acton -> aboutMenu());
         mainMenuItem.addActionListener(action -> showMainMenu.run());
+        instructionItem.addActionListener(action -> info());
 
         createMenuBar();
         initializeMnemonicAndAccelerator();
@@ -79,6 +81,7 @@ public class MenuBar extends JMenuBar {
         fileMenu.add(mainMenuItem);
 
         helpMenu.add(aboutItem);
+        helpMenu.add(instructionItem);
 
         add(fileMenu);
         add(helpMenu);
@@ -94,6 +97,8 @@ public class MenuBar extends JMenuBar {
                 KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
         aboutItem.setAccelerator(KeyStroke.getKeyStroke(
                 KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK));
+        instructionItem.setAccelerator(KeyStroke.getKeyStroke(
+                KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK));
     }
     /** This method shows the message dialog for about menu.*/
     private void aboutMenu() {
@@ -103,6 +108,14 @@ public class MenuBar extends JMenuBar {
                 "Created by: KV, Brandon, and Merit" + "\n"
                 + "TCSS 360 Trivia Maze", "About",
                 JOptionPane.INFORMATION_MESSAGE, image);
+    }
+    /**This method displays the game instruction*/
+    private void info(){
+      textLabel.setText("New Game" +
+             "Load Game" );
+      textLabel.setBounds(20,20,200,200);
+      JPanel panel = new JPanel();
+      panel.add(textLabel);
     }
 
     /**

@@ -8,12 +8,12 @@ import java.util.Scanner;
 public class TriviaDatabaseUploader {
     public static void upload(String path) {
         try {
-            // src/database/trivia-questions-1.txt
+            // ./trivia-questions-1.txt
             Scanner input = new Scanner(new File(path));
 
             Connection conn = null;
 
-            conn = DriverManager.getConnection("jdbc:sqlite:trivia.db");
+            conn = DriverManager.getConnection("jdbc:sqlite:./resources/trivia.db");
             Statement statement = conn.createStatement();
             statement.setQueryTimeout(30);
 

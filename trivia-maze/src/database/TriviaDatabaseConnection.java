@@ -1,5 +1,6 @@
 package database;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +16,9 @@ public class TriviaDatabaseConnection implements Database {
      * Creates a TriviaDatabaseConnection.
      */
     private TriviaDatabaseConnection() {
+        if (!new File("trivia.db").isFile()) {
+            TriviaDatabaseUploader.upload("../trivia-questions-1.txt");
+        }
         this.dbc = new DatabaseConnection("trivia.db");
     }
 

@@ -6,13 +6,13 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class TriviaDatabaseUploader {
-    public static void upload(String path) throws FileNotFoundException {
-        // src/database/trivia-questions-1.txt
-        Scanner input = new Scanner(new File(path));
-
-        Connection conn = null;
-
+    public static void upload(String path) {
         try {
+            // src/database/trivia-questions-1.txt
+            Scanner input = new Scanner(new File(path));
+
+            Connection conn = null;
+
             conn = DriverManager.getConnection("jdbc:sqlite:trivia.db");
             Statement statement = conn.createStatement();
             statement.setQueryTimeout(30);
@@ -35,19 +35,12 @@ public class TriviaDatabaseUploader {
                 prepStatement.setString(4, answer);
                 prepStatement.setString(5, type);
                 prepStatement.setString(6, topics);
-                System.out.println("Question:");
-                System.out.println(question);
-                System.out.println(choices);
-                System.out.println(answer);
-                System.out.println(type);
-                System.out.println(topics);
-                System.out.println();
                 prepStatement.executeUpdate();
                 count++;
             }
             System.out.println("Success");
             conn.close();
-        } catch (SQLException e) {
+        } catch (SQLException|FileNotFoundException e) {
             System.err.println(e.getMessage());
         }
     }

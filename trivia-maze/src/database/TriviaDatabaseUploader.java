@@ -2,15 +2,13 @@ package database;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Scanner;
 
-public class DatabaseUploader {
-    public static void main(String[] args) throws FileNotFoundException {
-        Scanner input = new Scanner(new File("src/database/trivia_questions.txt"));
+public class TriviaDatabaseUploader {
+    public static void upload(String path) throws FileNotFoundException {
+        // src/database/trivia-questions-1.txt
+        Scanner input = new Scanner(new File(path));
 
         Connection conn = null;
 
@@ -24,17 +22,27 @@ public class DatabaseUploader {
 
             int count = 1;
             while (input.hasNextLine()) {
+                String query ="INSERT INTO questions values(?,?,?,?,?,?)";
                 String question = input.nextLine();
                 String choices = input.nextLine();
                 String answer = input.nextLine();
                 String type = input.nextLine();
                 String topics = input.nextLine();
-                statement.executeUpdate(
-                        String.format(
-                                "insert into questions values('%s', '%s', '%s', '%s', '%s', '%s')",
-                                count, question, choices, answer, type, topics
-                        )
-                );
+                PreparedStatement prepStatement = conn.prepareStatement(query);
+                prepStatement.setString(1, "" + count);
+                prepStatement.setString(2, question);
+                prepStatement.setString(3, choices);
+                prepStatement.setString(4, answer);
+                prepStatement.setString(5, type);
+                prepStatement.setString(6, topics);
+                System.out.println("Question:");
+                System.out.println(question);
+                System.out.println(choices);
+                System.out.println(answer);
+                System.out.println(type);
+                System.out.println(topics);
+                System.out.println();
+                prepStatement.executeUpdate();
                 count++;
             }
             System.out.println("Success");

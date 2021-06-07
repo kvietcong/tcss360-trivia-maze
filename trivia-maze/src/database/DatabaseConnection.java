@@ -9,11 +9,11 @@ public class DatabaseConnection implements Database {
 
     /**
      * Creates a connection to a SQLite database with the given name.
-     * @param name Name of the database
+     * @param path Path of the database
      */
-    public DatabaseConnection(String name) {
+    public DatabaseConnection(String path) {
         try {
-            this.connection = DriverManager.getConnection("jdbc:sqlite:" + name);
+            this.connection = DriverManager.getConnection("jdbc:sqlite:" + path);
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }

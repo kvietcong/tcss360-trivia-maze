@@ -16,10 +16,10 @@ public class TriviaDatabaseConnection implements Database {
      * Creates a TriviaDatabaseConnection.
      */
     private TriviaDatabaseConnection() {
-        if (!new File("trivia.db").isFile()) {
-            TriviaDatabaseUploader.upload("../trivia-questions-1.txt");
+        if (!new File("./resources/trivia.db").isFile()) {
+            TriviaDatabaseUploader.upload("./resources/trivia-questions-1.txt");
         }
-        this.dbc = new DatabaseConnection("trivia.db");
+        this.dbc = new DatabaseConnection("./resources/trivia.db");
     }
 
     /**

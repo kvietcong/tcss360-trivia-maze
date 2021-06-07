@@ -2,7 +2,7 @@ package constants;
 
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import java.awt.Insets;
+import java.awt.*;
 
 /**
  * Class to hold constants and stuff.
@@ -34,6 +34,8 @@ public final class C {
     /** Default Insets. */
     public static final Insets INSET =
             new Insets(PADDING, PADDING, PADDING, PADDING);
+    /** Default big dialog dimension. */
+    public static final Dimension BIG_DIALOG = new Dimension(300, 150);
 
     private C() { }
 

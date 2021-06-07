@@ -1,11 +1,18 @@
 package gui;
 
 import constants.C;
-import maze.Room;
 import state.GameState;
 import state.GameStateSimple;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.Image;
@@ -28,14 +35,14 @@ public class MenuBar extends JMenuBar {
     private final JMenuItem mainMenuItem;
     /** About Menu. */
     private final JMenuItem aboutItem;
-    /**Instruction Menu*/
+    /** Instruction Menu. */
     private final JMenuItem instructionItem;
-    /**Cheat Menu*/
+    /** Cheat Menu. */
     private final  JMenuItem cheatItem;
     /** File chooser. */
     private final JFileChooser fileChooser;
-    /**Text Label for the game instruction*/
-   private final JTextArea textfield;
+    /** Text Label for the game instruction. */
+    private final JTextArea textField;
     /** Image for the about menu. */
     private final ImageIcon image;
     /** Extension filter for saving and loading. */
@@ -61,7 +68,7 @@ public class MenuBar extends JMenuBar {
         instructionItem = new JMenuItem("Game Instruction");
         cheatItem = new JMenuItem("Cheat");
         fileChooser  = new JFileChooser(C.PATH);
-        textfield = new JTextArea();
+        textField = new JTextArea();
         image = new ImageIcon("resources/mazeicon.png");
         extensionFilter = new FileNameExtensionFilter(
                 "Maze file(.maze)", "maze");
@@ -71,7 +78,7 @@ public class MenuBar extends JMenuBar {
         aboutItem.addActionListener(acton -> aboutMenu());
         mainMenuItem.addActionListener(action -> showMainMenu.run());
         instructionItem.addActionListener(action -> info());
-        cheatItem.addActionListener(action -> cheatmenu());
+        cheatItem.addActionListener(action -> cheatMenu());
         createMenuBar();
         initializeMnemonicAndAccelerator();
     }
@@ -115,41 +122,53 @@ public class MenuBar extends JMenuBar {
                 + "TCSS 360 Trivia Maze", "About",
                 JOptionPane.INFORMATION_MESSAGE, image);
     }
-    /**Displays game instruction*/
-    private void info(){
-     textfield.setText("""
-             The title on the top shows the room id you're currently in
-             Neighboring rooms are represented in buttons and aligned next to each other
-             Green represents an unlocked room, yellow represents unknown rooms and red represents locked rooms
-             Each room has room id, topics, and the distance from the end
-             Each time you pass through unknown rooms you have to answer a question
-              If you answer a question correctly, it passes to the next rooms. If you get it wrong the room will be locked forever
-             When passing through green rooms the progress bar increases based on the shorter distance.
-             The progress bar also decreases if you have a long distance
-             To win this game try to pass through yellow rooms and answer questions correctly. Which will take you to the next rooms. From there try passing through green rooms with a shorter distance to reach the end.
-             Enjoy the game:)"""
+    /** Displays game instruction. */
+    private void info() {
+        StringBuilder instructions = new StringBuilder();
+        instructions
+                .append("The title on the top shows the room id you're currently in.")
+                .append("\n\n")
+                .append("Neighboring rooms are represented in buttons and aligned next to each other.")
+                .append("\n\n")
+                .append("Green represents an unlocked room, ")
+                .append("yellow represents unknown rooms and red represents locked rooms")
+                .append("\n\n")
+                .append("Each room has room id, topics, and the distance from the end. ")
+                .append("Each time you pass through unknown rooms you have to answer a question")
+                .append("\n\n")
+                .append("If you answer a question correctly, you unlock the room, allowing you to go into it. ")
+                .append("If you get it wrong the room will be locked forever")
+                .append("\n\n")
+                .append("When passing through green rooms the progress bar increases based on the shorter distance. ")
+                .append("The progress bar also decreases if you have a long distance")
+                .append("\n\n")
+                .append("To win this game try to pass through yellow rooms and answer questions correctly, ")
+                .append("which will take you to the next rooms. ")
+                .append("From there try passing through green rooms with a shorter distance to reach the end.")
+                .append("\n\n")
+                .append("Enjoy the Game :)");
 
-     );
-     textfield.setEditable(false);
-     textfield.setLineWrap(true);
-     textfield.setWrapStyleWord(true);
-    JOptionPane.showMessageDialog(this, new JScrollPane(textfield),"How to play",JOptionPane.OK_OPTION);
+        textField.setText(instructions.toString());
+        textField.setEditable(false);
+        textField.setLineWrap(true);
+        textField.setWrapStyleWord(true);
+
+        JScrollPane scroller = new JScrollPane(textField);
+        scroller.setPreferredSize(C.BIG_DIALOG);
+        scroller.getVerticalScrollBar().setValue(0);
+        JOptionPane.showMessageDialog(this, scroller,
+                "How to play", JOptionPane.INFORMATION_MESSAGE);
 
     }
-    /**Display cheat menu*/
-    private void cheatmenu(){
-    try {
-        Room room = state.getCurrentRoom();
-        state.moveToRoom(room);
-        JLabel label = new JLabel();
-        label.setText(room.toString());
-        JOptionPane.showMessageDialog(this, label, "Cheat", JOptionPane.OK_OPTION);
-    }
-    catch (NullPointerException e){
-
-        JLabel label1 = new JLabel("Please start the game");
-        JOptionPane.showMessageDialog(this,label1,"",JOptionPane.WARNING_MESSAGE);
-    }
+    /** Display cheat menu. */
+    private void cheatMenu() {
+        try {
+            state.moveToRoom(state.getEndRoom());
+        } catch (NullPointerException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Please start a game", "Cheat",
+                    JOptionPane.WARNING_MESSAGE);
+        }
 
     }
 

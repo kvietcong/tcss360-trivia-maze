@@ -39,7 +39,7 @@ public class TriviaPanel extends JPanel {
         gbc.gridy = 0;
         gbc.ipady = C.PADDING;
 
-        JLabel questionTitle = new JLabel(question.getQuestion());
+        JLabel questionTitle = new JLabel(C.wrapHTML(question.getQuestion()));
         questionTitle.setFont(new Font("Arial", Font.BOLD, C.H2));
         center.add(questionTitle, gbc);
 

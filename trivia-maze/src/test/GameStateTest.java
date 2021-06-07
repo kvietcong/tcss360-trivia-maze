@@ -12,25 +12,38 @@ import state.GameStateSimple;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Class to test Game State interface.
  */
 class GameStateTest {
     /** Testing State. */
-    GameState testState;
+    private GameState testState;
 
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
+        Test.main(null); // Make sure test.maze is regenerated with correct things
+
         Room startRoom = new RoomSimple(0);
         Room endRoom = new RoomSimple(1);
 
         Map<Room, Set<Room>> testMazeMap = new HashMap<>();
         testMazeMap.put(startRoom, Collections.singleton(endRoom));
         testMazeMap.put(endRoom, Collections.singleton(startRoom));
+        Maze testMaze = new MazeGraph(testMazeMap);
 
         Map<Room, GameState.RoomState> testStateMap = new HashMap<>();
         testStateMap.put(startRoom, GameState.RoomState.UNLOCKED);
@@ -42,9 +55,8 @@ class GameStateTest {
         testQuestions.put(endRoom, testQuestion);
 
         GameStateSimple manualStateSimple = (GameStateSimple) GameStateSimple.getInstance();
-        Maze testMaze2 = new MazeGraph(testMazeMap);
 
-        manualStateSimple.setState(testMaze2, startRoom, endRoom, startRoom, testStateMap, testQuestions);
+        manualStateSimple.setState(testMaze, startRoom, endRoom, startRoom, testStateMap, testQuestions);
         testState = manualStateSimple;
     }
 

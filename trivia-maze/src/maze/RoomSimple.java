@@ -19,7 +19,7 @@ public class RoomSimple extends AbstractRoom {
     public int getID() { return id; }
 
     @Override
-    public String toString() { return "Room [id = " + id + "]"; }
+    public String toString() { return "Room " + id; }
 
     @Override
     public boolean equals(Object other) {

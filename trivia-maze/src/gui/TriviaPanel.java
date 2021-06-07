@@ -5,16 +5,13 @@ import maze.Room;
 import question.Question;
 import state.GameState;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.util.Arrays;
 
 public class TriviaPanel extends JPanel {
@@ -34,19 +31,18 @@ public class TriviaPanel extends JPanel {
         container.add(title, BorderLayout.NORTH);
 
         JPanel center = new JPanel();
-        center.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridy = 0;
-        gbc.ipady = C.PADDING;
+        center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
 
-        JLabel questionTitle = new JLabel(C.wrapHTML(question.getQuestion()));
+        JTextArea questionTitle = new JTextArea(question.getQuestion());
+        questionTitle.setWrapStyleWord(true);
+        questionTitle.setEditable(false);
+        questionTitle.setLineWrap(true);
         questionTitle.setFont(new Font("Arial", Font.BOLD, C.H2));
-        center.add(questionTitle, gbc);
+        center.add(questionTitle);
 
         JPanel answersContainer = new JPanel();
         answersContainer.setLayout(new FlowLayout());
-        gbc.gridy++;
-        center.add(answersContainer, gbc);
+        center.add(answersContainer);
 
         if (question.getType() != Question.QuestionType.SA) {
             Arrays.stream(question.getChoices()).forEach(choice -> {
@@ -59,6 +55,7 @@ public class TriviaPanel extends JPanel {
             JTextField textField = new JTextField();
             textField.addActionListener(action ->
                     gameState.attemptQuestion(room, textField.getText()));
+            textField.setColumns(C.PADDING);
             answersContainer.add(textField);
         }
 
@@ -67,8 +64,14 @@ public class TriviaPanel extends JPanel {
         leaveButton.setBackground(Color.RED);
         leaveButton.setFont(new Font("Arial", Font.BOLD, C.H3));
         leaveButton.setForeground(Color.WHITE);
-        gbc.gridy++;
-        center.add(leaveButton, gbc);
+        JPanel centerButton = new JPanel();
+        centerButton.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = C.INSET;
+        gbc.ipady = C.PADDING;
+        gbc.ipadx = C.PADDING;
+        centerButton.add(leaveButton, gbc);
+        center.add(centerButton);
 
         setBorder(C.BORDER);
         container.add(center, BorderLayout.CENTER);

@@ -13,17 +13,7 @@ public class DatabaseConnection implements Database {
      */
     public DatabaseConnection(String name) {
         try {
-            // create a database connection
             this.connection = DriverManager.getConnection("jdbc:sqlite:" + name);
-
-            // Create a small table of questions for testing
-            Statement statement = connection.createStatement();
-            statement.setQueryTimeout(30);  // set timeout to 30 sec.
-
-//            statement.executeUpdate("drop table if exists questions");
-//            statement.executeUpdate("create table questions (id integer, question string, choices string, answer string)");
-//            statement.executeUpdate("insert into questions values(1, 'Are you good?', 'True|False', 'True')");
-//            statement.executeUpdate("insert into questions values(2, 'Are you sure?', 'Yes|No|Maybe|I don''t know', 'Yes')");
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -106,5 +96,8 @@ public class DatabaseConnection implements Database {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    public static void main(String[] args) {
     }
 }

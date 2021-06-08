@@ -20,6 +20,7 @@ import java.awt.GridLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -94,19 +95,28 @@ public class CurrentInfoPanel extends JPanel implements PropertyChangeListener {
         currentRoomTitle.setText(C.wrapHTML(
                 "You are in " + STATE.getCurrentRoom().toString()));
 
-        int totalDistance = STATE.getDistanceToEnd(STATE.getStartRoom());
-        int currentDistance = STATE.getDistanceToEnd(STATE.getCurrentRoom());
-        progressBar.setValue((int)
-                ((float) (totalDistance - currentDistance)
-                        / totalDistance
-                        * C.MAX_PROGRESS));
+        progressBar.setValue(STATE.getProgress());
         progressBar.updateUI();
 
         STATE.getCurrentNeighbors().forEach(this::createRoomButton);
 
+        StringBuilder label = new StringBuilder();
+
+        Room currentRoom = STATE.getCurrentRoom();
+        label.append(currentRoom)
+                .append("<br/>")
+                .append("You are here")
+                .append("<br/>")
+                .append(STATE.getDistanceToEnd(currentRoom))
+                .append(" rooms from the end");
+        JRoomButton currentRoomButton =
+                new JRoomButton(C.wrapHTML(label.toString()), currentRoom);
+        currentRoomButton.setEnabled(false);
+
         mazeNeighborPanel.add(containerizeButtons(
                 "Neighboring Rooms", Stream.of(
-                        unlockedButtons, unknownButtons, lockedButtons)
+                        unlockedButtons, unknownButtons, lockedButtons,
+                        Collections.singleton(currentRoomButton))
                         .flatMap(Collection::stream)
                         .collect(Collectors.toSet())
         ));

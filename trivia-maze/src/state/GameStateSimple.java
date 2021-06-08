@@ -129,6 +129,14 @@ public final class GameStateSimple implements GameState {
     public Question getRoomQuestion(Room room) { return questions.getOrDefault(room, null); }
     public int getDistanceToEnd(Room room) { return distancesToEndRoom.getOrDefault(room, -1); }
 
+    public int getProgress() {
+        int max = -1;
+        for (Room room : maze) {
+            max = Math.max(max, getDistanceToEnd(room));
+        }
+        return 100 - (int) ((float) getDistanceToEnd(currentRoom) / max * 100);
+    }
+
     public void setRoomState(Room room, RoomState newState) {
         RoomState oldState = getRoomState(room);
         roomStates.put(room, newState);

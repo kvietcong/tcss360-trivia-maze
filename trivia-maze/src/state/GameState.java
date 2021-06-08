@@ -110,6 +110,12 @@ public interface GameState extends Serializable {
     void setRoomState(Room room, RoomState state);
 
     /**
+     * Get the progress of the current state (Percentage).
+     * @return Progress in percentage
+     */
+    int getProgress();
+
+    /**
      * Add a new object that will listen to changes.
      * @param theListener The object that will now listen for game events.
      */

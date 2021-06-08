@@ -16,8 +16,7 @@ import java.util.Random;
 public class TriviaBase {
     private static final Random RANDOM = new Random();
 
-    private final List<Map<String, String>> questionsInfo;
-    private final List<Question> questions;
+    private final Table questionsData;
     private List<Question> currentQuestions;
 
     /**
@@ -25,20 +24,18 @@ public class TriviaBase {
      * @param tdbc Connection to the trivia database.
      */
     public TriviaBase(TriviaDatabaseConnection tdbc) {
-        this.questionsInfo = tdbc.getData().get("questions");
-        this.questions = readQuestions(this.questionsInfo);
-        this.currentQuestions = readQuestions(this.questionsInfo);
+        this.questionsData = tdbc.getData().get("questions");
+        this.currentQuestions = readQuestions(this.questionsData);
     }
 
     /**
-     * Reads the questions from the format given by the TriviaDatabaseConnection and
-     * converts them into Question objects.
-     * @param questionsInfo Question data in TriviaDatabaseConnection format
+     * Reads the questions from the given Table and returns them as Questions.
+     * @param questionsData Table of question data
      * @return List of Question objects
      */
-    private List<Question> readQuestions(List<Map<String, String>> questionsInfo) {
+    private List<Question> readQuestions(Table questionsData) {
         List<Question> questionsList = new ArrayList<>();
-        for (Map<String, String> q : questionsInfo) {
+        for (Map<String, String> q : questionsData.getAllRows()) {
             questionsList.add(
                     QuestionFactory.createQuestion(
                         q.get("question"),
@@ -98,7 +95,7 @@ public class TriviaBase {
      * Refreshes the questions in the TriviaBase to its original state.
      */
     public void refresh() {
-        this.currentQuestions = readQuestions(this.questionsInfo);
+        this.currentQuestions = readQuestions(this.questionsData);
     }
 
     /**
@@ -107,21 +104,5 @@ public class TriviaBase {
      */
     public int size() {
         return currentQuestions.size();
-    }
-
-    /**
-     * Testing method for TriviaBase class
-     * @param args Command line arguments
-     */
-    public static void main(String[] args) {
-        TriviaBase tb = new TriviaBase(TriviaDatabaseConnection.getConnection());
-        List<Question> questions = tb.getRandomQuestions(3);
-        System.out.println(questions);
-        System.out.println();
-        questions = tb.getRandomQuestions(1);
-        System.out.println(questions);
-        System.out.println();
-        questions = tb.getRandomQuestions(4);
-        System.out.println(questions);
     }
 }

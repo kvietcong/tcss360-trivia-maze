@@ -6,14 +6,20 @@ import java.sql.*;
 import java.util.Scanner;
 
 public class TriviaDatabaseUploader {
-    public static void upload(String path) {
+    /**
+     * Reads the formatted file at the given input path and uploads it to a SQLite database at the given output path.
+     * If the database of the given path and name does not exist yet, it will be created.
+     * If the database already contains a table of questions, it will be overwritten.
+     * @param inputPath Path of the input file to read question data from (.txt).
+     * @param outputPath Path of the output file to create the database in (.db).
+     */
+    public static void upload(String inputPath, String outputPath) {
         try {
-            // ./trivia-questions-1.txt
-            Scanner input = new Scanner(new File(path));
+            Scanner input = new Scanner(new File(inputPath));
 
             Connection conn = null;
 
-            conn = DriverManager.getConnection("jdbc:sqlite:./resources/trivia.db");
+            conn = DriverManager.getConnection("jdbc:sqlite:" + outputPath);
             Statement statement = conn.createStatement();
             statement.setQueryTimeout(30);
 

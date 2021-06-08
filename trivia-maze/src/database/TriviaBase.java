@@ -102,6 +102,14 @@ public class TriviaBase {
     }
 
     /**
+     * Returns the number of questions in the pool.
+     * @return The number of questions in the pool.
+     */
+    public int size() {
+        return currentQuestions.size();
+    }
+
+    /**
      * Testing method for TriviaBase class
      * @param args Command line arguments
      */

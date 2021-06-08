@@ -51,7 +51,7 @@ public class TriviaDatabaseConnection implements Database {
      * @return Map of tables and their data from the database.
      */
     @Override
-    public Map<String, List<Map<String, String>>> getData() {
+    public Map<String, Table> getData() {
         return this.dbc.getData();
     }
 
@@ -61,16 +61,5 @@ public class TriviaDatabaseConnection implements Database {
     @Override
     public void close() {
         this.dbc.close();
-    }
-
-    public static void main(String[] args)
-    {
-        // Test getting a connection to the trivia database and print the content
-        TriviaDatabaseConnection tdbc = TriviaDatabaseConnection.getConnection();
-        List<Map<String, String>> questions = tdbc.getData().get("questions");
-        for (Map<String, String> q : questions) {
-            System.out.println(q);
-        }
-        tdbc.close();
     }
 }

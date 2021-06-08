@@ -25,12 +25,10 @@ public class DatabaseConnection implements Database {
      * @return Map of tables and their data from the database.
      */
     @Override
-    public Map<String, List<Map<String, String>>> getData() {
+    public Map<String, Table> getData() {
         try {
             // Create a map of table names to table data
-            // Each table's data is a list of maps, where each map represents a row by
-            // mapping the column name to its entry.
-            Map<String, List<Map<String, String>>> tables = new HashMap<>();
+            Map<String, Table> tables = new HashMap<>();
             Statement statement = connection.createStatement();
             statement.setQueryTimeout(30);
 
@@ -38,7 +36,7 @@ public class DatabaseConnection implements Database {
             ResultSet tablesInfo = connection.getMetaData().getTables(null, null, null,  null);
             while (tablesInfo.next()) {
                 String tableName = tablesInfo.getString("TABLE_NAME");
-                tables.put(tableName, this.getTableData(tableName, statement));
+                tables.put(tableName, this.getTable(tableName, statement));
             }
 
             return tables;
@@ -49,15 +47,13 @@ public class DatabaseConnection implements Database {
     }
 
     /**
-     * Gets all the data from the given table using the given connection statement.
-     * Each entry in the list is a row that maps column names to their value.
+     * Creates a Table with the data from the database using the given table name using the given connection statement.
      * @param name Name of the table to retrieve
      * @param statement Connection statement to use to retrieve data
-     * @return List of rows from the table
+     * @return Table of the data
      */
-    private List<Map<String, String>> getTableData(String name, Statement statement) {
+    private Table getTable(String name, Statement statement) {
         try {
-            List<Map<String, String>> tableData = new ArrayList<>();
             ResultSet rs = statement.executeQuery("select * from " + name);
 
             // Get the set of column names
@@ -68,16 +64,18 @@ public class DatabaseConnection implements Database {
                 colNames.add(rsmd.getColumnName(i));
             }
 
+            Table table = new Table(colNames);
+
             // Make an entry in the map for each column and its value
             while (rs.next()) {
                 Map<String, String> row = new HashMap<>();
                 for (String n : colNames) {
                     row.put(n, rs.getString(n));
                 }
-                tableData.add(row);
+                table.addRow(row);
             }
 
-            return tableData;
+            return table;
         } catch (SQLException e) {
             System.err.println(e.getMessage());
             return null;
@@ -96,8 +94,5 @@ public class DatabaseConnection implements Database {
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
-    }
-
-    public static void main(String[] args) {
     }
 }

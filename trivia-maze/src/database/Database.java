@@ -4,6 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface Database {
-    Map<String, List<Map<String, String>>> getData();
+    Map<String, Table> getData();
     void close();
 }

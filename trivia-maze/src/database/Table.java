@@ -70,6 +70,14 @@ public class Table {
     }
 
     /**
+     * Returns the number of rows in the table.
+     * @return Number of rows in the table.
+     */
+    public int size() {
+        return this.rows.size();
+    }
+
+    /**
      * Checks if the two rows match.
      * (column names match, and all the values of the entries for each column match).
      * @param a First row.
@@ -94,12 +102,12 @@ public class Table {
      */
     private boolean columnNamesMatch(Set<String> a, Set<String> b) {
         for (String c : a) {
-            if (!b.contains(a)) {
+            if (!b.contains(c)) {
                 return false;
             }
         }
         for (String c : b) {
-            if (!a.contains(b)) {
+            if (!a.contains(c)) {
                 return false;
             }
         }

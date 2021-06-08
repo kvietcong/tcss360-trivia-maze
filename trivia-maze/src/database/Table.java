@@ -84,7 +84,7 @@ public class Table {
      * @param b Second row.
      * @return Whether or not the two rows match.
      */
-    private boolean rowsMatch(Map<String, String> a, Map<String, String> b) {
+        private boolean rowsMatch(Map<String, String> a, Map<String, String> b) {
         for (String c : a.keySet()) {
             if (!a.get(c).equals(b.get(c))) {
                 return false;

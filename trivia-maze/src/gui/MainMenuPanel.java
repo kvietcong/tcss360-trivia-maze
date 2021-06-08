@@ -1,12 +1,16 @@
 package gui;
 
 import constants.C;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.function.Consumer;
 
 public class MainMenuPanel extends JPanel {
@@ -24,6 +28,15 @@ public class MainMenuPanel extends JPanel {
         gbc = new GridBagConstraints();
         setLayout(new GridBagLayout());
         setConstraints();
+
+        try {
+            BufferedImage titleImage = ImageIO.read(new File("./resources/title.png"));
+            JLabel imageLabel = new JLabel(new ImageIcon(titleImage));
+            gbc.gridy++;
+            add(imageLabel,  gbc);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //new game button
         JButton newGameButton = new JButton("New Game");

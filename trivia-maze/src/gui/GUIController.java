@@ -30,7 +30,7 @@ public class GUIController {
         CardLayout cards = new CardLayout();
         ImageIcon imageIcon = new ImageIcon("resources/mazeicon.png");
         JFrame frame = new JFrame("Trivia Maze");
-        frame.setSize(C.WIDTH, C.HEIGHT);
+        frame.setSize(C.WIDTH, C.HEIGHT + 175);
         framePanel = new JPanel();
         framePanel.setLayout(cards);
 

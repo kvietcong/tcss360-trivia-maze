@@ -44,7 +44,6 @@ public class TriviaDatabaseUploader {
                 prepStatement.executeUpdate();
                 count++;
             }
-            System.out.println("Success");
             conn.close();
         } catch (SQLException|FileNotFoundException e) {
             System.err.println(e.getMessage());

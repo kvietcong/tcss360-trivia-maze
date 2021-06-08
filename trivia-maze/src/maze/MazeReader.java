@@ -32,11 +32,4 @@ public final class MazeReader {
         }
         return rooms;
     }
-
-    // FOR TESTING - DELETE LATER
-    public static void main(String[] args) {
-        Map<Room, Set<Room>> maze = MazeReader.readMaze("maze-0.txt");
-        assert maze != null;
-        maze.keySet().forEach(room -> System.out.println(maze.get(room)));
-    }
 }

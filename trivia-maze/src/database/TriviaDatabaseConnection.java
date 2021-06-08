@@ -10,16 +10,20 @@ import java.util.Map;
 public class TriviaDatabaseConnection implements Database {
 
     private final DatabaseConnection dbc;
-    private static final TriviaDatabaseConnection TDBC = new TriviaDatabaseConnection();
+    private static final TriviaDatabaseConnection TDBC = new TriviaDatabaseConnection(
+            "./resources/trivia-questions-1.txt",
+            "./resources/trivia.db"
+    );
 
     /**
      * Creates a TriviaDatabaseConnection.
      */
-    private TriviaDatabaseConnection() {
-        if (!new File("./resources/trivia.db").isFile()) {
-            TriviaDatabaseUploader.upload("./resources/trivia-questions-1.txt");
+    private TriviaDatabaseConnection(String inputPath, String outputPath) {
+        if (!new File(outputPath).isFile()) {
+            // Questions from https://www.quizbreaker.com/trivia-questions
+            TriviaDatabaseUploader.upload(inputPath, outputPath);
         }
-        this.dbc = new DatabaseConnection("./resources/trivia.db");
+        this.dbc = new DatabaseConnection(outputPath);
     }
 
     /**
@@ -28,6 +32,17 @@ public class TriviaDatabaseConnection implements Database {
      */
     public static TriviaDatabaseConnection getConnection() {
         return TDBC;
+    }
+
+    /**
+     * Gets a connection to a new trivia database with the given file input path and database output path.
+     * NOT RECOMMENDED FOR NORMAL USE. USE WITH CAUTION.
+     * @param inputPath Path of the input file to upload to the database if it doesn't exist.
+     * @param outputPath Path of the database file to use/create.
+     * @return Connection to database resulting from the given paths.
+     */
+    public static TriviaDatabaseConnection getConnectionFromPath(String inputPath, String outputPath) {
+        return new TriviaDatabaseConnection(inputPath, outputPath);
     }
 
     /**

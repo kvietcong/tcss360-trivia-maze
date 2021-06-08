@@ -1,4 +1,4 @@
-Are you good?
+Is this true?
 True|False
 True
 TF
@@ -9,7 +9,7 @@ Yes
 MC
 Topic0
 What is your favorite color?
-Blue|No, gre-|AHHH
-AHHH
-MC
+
+Blue
+SA
 Topic1|Topic2

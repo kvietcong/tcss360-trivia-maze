@@ -78,3 +78,33 @@ What is the largest planet in the solar system?
 Jupiter
 SA
 Science
+Prunes are a common name for what dried fruit?
+Plum|Grapefruit|Peach|Mango
+Plum
+MC
+Food
+Indian food cooked over charcoal in a clay oven is known as "Tandoori".
+True|False
+True
+TF
+Food
+What was the first soft drink in space?
+Coca Cola|Pepsi|Sprite|Dr. Pepper
+Coca Cola
+MC
+Food
+Tea is the most consumed manufactured drink in the world.
+True|False
+True
+TF
+Food
+Which country invented ice cream?
+
+China
+SA
+Food
+What is the fear of dogs known as?
+caninephobia|cynophobia|canidphobia
+cynophobia
+MC
+Animals

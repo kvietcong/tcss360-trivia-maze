@@ -26,6 +26,7 @@ public class TriviaBase {
     public TriviaBase(TriviaDatabaseConnection tdbc) {
         this.questionsData = tdbc.getData().get("questions");
         this.currentQuestions = readQuestions(this.questionsData);
+        this.currentQuestions.forEach(System.out::println);
     }
 
     /**
